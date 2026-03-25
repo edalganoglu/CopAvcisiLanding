@@ -11,3 +11,25 @@
 body {
   min-height: max(884px, 100dvh);
 }
+.mockup-frame {
+  padding: 0.625rem;
+  border-radius: 1.75rem;
+  background: #e8e8e8;
+  box-shadow:
+    0 0 0 1px rgba(111, 122, 112, 0.12),
+    0 25px 50px -12px rgba(0, 0, 0, 0.18);
+}
+@media (min-width: 640px) {
+  .mockup-frame {
+    padding: 0.875rem;
+    border-radius: 2rem;
+  }
+}
+.card-legal {
+  border: 1px solid rgba(111, 122, 112, 0.14);
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.055);
+}
+.link-inline {
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 2px;
+}
