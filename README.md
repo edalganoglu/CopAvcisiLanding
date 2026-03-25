@@ -6,7 +6,12 @@
 
 1. GitHub’da repoda **Settings → Pages**.
 2. **Build and deployment**: Source **Deploy from a branch**, branch **main**, folder **/ (root)**.
-3. Birkaç dakika sonra site adresi genelde `https://edalganoglu.github.io/CopAvcisiLanding/` olur. App Store ve Play Console’da gizlilik politikası URL’si olarak bu adresi veya `#gizlilik-politikasi` ile birlikte tam sayfa kökünü kullanın.
+3. Birkaç dakika sonra site adresi genelde `https://edalganoglu.github.io/CopAvcisiLanding/` olur.
+
+**Gizlilik politikası (doğrudan URL):** `https://edalganoglu.github.io/CopAvcisiLanding/gizlilik-politikasi.html`  
+**Kullanım koşulları:** `.../kullanim-kosullari.html` · **Çerezler:** `.../cerezler.html` · **İletişim:** `.../iletisim.html`
+
+Görseller `assets/` altında uygulama reposundan kopyalanan `logo.png` ve `onboarding-*.png` dosyalarıdır.
 
 ## Mağaza linkleri
 
