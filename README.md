@@ -11,6 +11,9 @@
 **Gizlilik politikası (doğrudan URL):** `https://edalganoglu.github.io/CopAvcisiLanding/gizlilik-politikasi.html`  
 **Kullanım koşulları:** `.../kullanim-kosullari.html` · **Çerezler:** `.../cerezler.html` · **İletişim:** `.../iletisim.html`
 
+**Kurumsal ödeme dönüşü (iyzico / derin bağlantı köprüsü):** `https://edalganoglu.github.io/CopAvcisiLanding/billing-return.html`  
+Ödeme sağlayıcı veya tarayıcı doğrudan `copavcisi://` şemasını açamıyorsa, Supabase `iyzico-callback` içindeki `IYZICO_SUCCESS_REDIRECT_URL` (ve gerekirse hata yönlendirmesi) bu HTTPS adresine ayarlanır; sayfa sorgu dizesini koruyarak `copavcisi://billing-return?...` yönlendirmesi yapar.
+
 Görseller `assets/` altında uygulama reposundan kopyalanan `logo.png` ve `onboarding-*.png` dosyalarıdır.
 
 ## Mağaza linkleri
