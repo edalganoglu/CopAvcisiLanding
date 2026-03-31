@@ -23,3 +23,7 @@ Görseller `assets/` altında uygulama reposundan kopyalanan `logo.png` ve `onbo
 ## Hukuki metin
 
 Metinler genel bilgilendirme amaçlıdır; kesin hukuki bağlayıcılık için yerel mevzuata uygun avukat incelemesi önerilir.
+
+## Mağaza şeffaflığı (Google Play)
+
+Politika uyumu için tam açıklamada kullanabileceğiniz canlı kaynak örneği: ana sayfa ve feragatname metni [https://edalganoglu.github.io/CopAvcisiLanding/](https://edalganoglu.github.io/CopAvcisiLanding/) adresindedir. Gerekirse aynı metne işaret eden doğrudan kullanım koşulları: [kullanim-kosullari.html](https://edalganoglu.github.io/CopAvcisiLanding/kullanim-kosullari.html).
