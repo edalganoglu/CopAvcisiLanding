@@ -20,6 +20,22 @@ function domainFromEmail(email) {
   return i === -1 ? s : s.slice(i + 1);
 }
 
+/**
+ * Bazı resmî siteler yalnızca www alt alanında yayınlanır; düz alan adı açılmaz.
+ * Gerekirse bu kümeye alan adı ekleyin (küçük harf).
+ */
+const DOMAINS_NEED_WWW = new Set(["adana.bel.tr"]);
+
+/** href ve görünen metin (liste için). */
+function siteLinkFromDomain(domain) {
+  const d = String(domain).trim().toLowerCase();
+  if (DOMAINS_NEED_WWW.has(d)) {
+    const host = `www.${d}`;
+    return { href: `https://${host}/`, label: host };
+  }
+  return { href: `https://${d}/`, label: d };
+}
+
 const withEmail = d
   .filter((x) => x.email && String(x.email).trim())
   .sort((a, b) => a.name.localeCompare(b.name, "tr"));
@@ -27,9 +43,11 @@ const withEmail = d
 const lines = withEmail.map((x) => {
   const n = esc(x.name);
   const domain = domainFromEmail(x.email);
-  const dEsc = esc(domain);
+  const { href, label } = siteLinkFromDomain(domain);
+  const hrefEsc = esc(href);
+  const labelEsc = esc(label);
   return (
-    `<li><span class="font-medium text-on-surface">${n}</span> — <a class="text-primary font-medium underline link-inline decoration-primary/40 break-all" href="https://${dEsc}" rel="noopener noreferrer">${dEsc}</a></li>`
+    `<li><span class="font-medium text-on-surface">${n}</span> — <a class="text-primary font-medium underline link-inline decoration-primary/40 break-all" href="${hrefEsc}" rel="noopener noreferrer">${labelEsc}</a></li>`
   );
 });
 
