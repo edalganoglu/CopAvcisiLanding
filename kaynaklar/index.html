@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="Çöp Avcısı veri kaynakları ve metodoloji — iletişim bilgilerinin kamuya açık belediye sitelerinden kullanımı."/>
+<meta name="description" content="Çöp Avcısı’nda belediye iletişim bilgileri nasıl toplanır? Manuel doğrulama, e-posta yönlendirme sınırları ve güncellik. Resmî kurum uygulaması değildir."/>
 <link rel="canonical" href="https://www.copavcisi.com/kaynaklar"/>
-<title>Veri kaynakları ve metodoloji — Çöp Avcısı</title>
+<title>Çöp Avcısı — Kaynaklar ve veri yöntemi</title>
 <link rel="icon" type="image/png" href="../assets/logo.png"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="../assets/tailwind-config.js"></script>
@@ -32,43 +32,58 @@
 </div>
 </nav>
 <main class="pt-28 pb-24 px-6 max-w-3xl mx-auto">
-<p class="text-sm text-slate-600 dark:text-slate-400 mb-8"><a class="text-primary font-semibold underline link-inline decoration-primary/45" href="../index.html">Ana sayfa</a> / Veri kaynakları</p>
+<p class="text-sm text-slate-600 dark:text-slate-400 mb-8"><a class="text-primary font-semibold underline link-inline decoration-primary/45" href="../index.html">Ana sayfa</a> / Kaynaklar</p>
 <article class="card-legal bg-surface-container-lowest rounded-[2rem] p-8 md:p-12">
-<h1 class="text-3xl md:text-4xl font-bold text-primary tracking-tight mb-2">Veri kaynakları ve metodoloji</h1>
-<p class="text-sm text-slate-600 dark:text-slate-400 mb-8">Son güncelleme: 13 Nisan 2026</p>
+<h1 class="text-3xl md:text-4xl font-bold text-primary tracking-tight mb-2">Kaynaklar ve veri yöntemi</h1>
+<p class="text-sm text-slate-600 dark:text-slate-400 mb-8">Son güncelleme: 15 Nisan 2026</p>
 <div class="text-slate-700 dark:text-slate-300 space-y-5 text-[15px] md:text-base leading-relaxed max-w-prose">
-<p>Çöp Avcısı, çevre bildirimlerini kolaylaştırmak için geliştirilmiş <strong class="text-on-surface">bağımsız bir sivil teknoloji uygulamasıdır</strong>. Kamu kurumu veya belediye uygulaması değildir; hiçbir belediyeyi, büyükşehir belediyesini veya resmî mercii <strong class="text-on-surface">temsil etmez</strong>, adına taahhüt vermez veya bağlayıcı işlem yapmaz.</p>
+<div class="rounded-2xl border border-amber-200 dark:border-amber-900/60 bg-amber-50 dark:bg-amber-950/30 p-5 md:p-6" role="note" aria-label="Önemli bilgi">
+<p class="font-semibold text-amber-950 dark:text-amber-100 mb-2">Kısa uyarı</p>
+<ul class="list-disc pl-5 space-y-1.5 text-amber-950/90 dark:text-amber-50/95">
+<li>Çöp Avcısı, <strong class="text-on-surface">bağımsız bir sivil teknoloji (civic tech) uygulamasıdır</strong>.</li>
+<li>Kamu kurumu, belediye veya devlet uygulaması <strong class="text-on-surface">değildir</strong>.</li>
+<li>Hiçbir resmî kurumu <strong class="text-on-surface">temsil etmez</strong>; resmî yetki, resmî entegrasyon veya kamu adına işlem yapma iddiasında <strong class="text-on-surface">bulunmaz</strong>.</li>
+</ul>
+</div>
 
-<h2 class="text-xl font-bold text-on-surface pt-5">Veriler nereden geliyor?</h2>
-<p>Uygulama, kullanıcıların gönderdiği raporları yönlendirirken bazı kayıtlarda, <strong class="text-on-surface">ilgili belediyelerin kendi internet sitelerinde kamuya açık olarak yayımlanan</strong> iletişim bilgilerini (örneğin e-posta adresi) kullanır. Bu bilgiler, belediyelerin resmî web sitelerinde “İletişim” veya benzeri sayfalarda herkesin erişimine sunulan içerikten alınır.</p>
-<p>Çöp Avcısı ile belediyeler arasında <strong class="text-on-surface">resmî entegrasyon, veri paylaşımı anlaşması veya özel yetki</strong> bulunmaz; yalnızca kamuya açık iletişim bilgilerinin kullanımı söz konusudur.</p>
+<h2 class="text-xl font-bold text-on-surface pt-2">İletişim bilgileri nasıl toplanıyor?</h2>
+<p>Belediye e-posta adresleri, aşağıdaki yöntemle veri tabanına işlenir:</p>
+<ol class="list-decimal pl-5 space-y-2">
+<li>Her belediye için <strong class="text-on-surface">ilgili belediyenin kendi resmî (kurumsal) internet sitesi</strong> esas alınır (“orijinal site”).</li>
+<li>Sitede <strong class="text-on-surface">İletişim</strong> veya <strong class="text-on-surface">İletişim bilgileri</strong> gibi kamuya açık bölümler bulunur.</li>
+<li>Bu bölümlerde yayımlanan <strong class="text-on-surface">e-posta adresleri</strong>, <strong class="text-on-surface">tek tek</strong> kontrol edilerek alınır.</li>
+<li><strong class="text-on-surface">Otomatik toplu çekim (bulk scraping)</strong> ile tüm Türkiye’yi tek seferde tarayan bir sistem <strong class="text-on-surface">kullanılmaz</strong>. Vurgu: <strong class="text-on-surface">Manuel / tek tek doğrulama</strong> ile resmî sitedeki kamuya açık iletişim bilgisinin alınması.</li>
+<li>Belediye siteleri zaman içinde değişebileceği için veriler <strong class="text-on-surface">periyodik olarak gözden geçirilip güncellenmeye çalışılır</strong>; yine de <strong class="text-on-surface">anlık sapma</strong> olabilir.</li>
+<li><strong class="text-on-surface">Güncel ve bağlayıcı</strong> iletişim için kullanıcı her zaman <strong class="text-on-surface">ilgili belediyenin güncel resmî web sitesini</strong> esas almalıdır.</li>
+</ol>
+<p>Çöp Avcısı ile belediyeler arasında <strong class="text-on-surface">resmî iş birliği, yetkili ortaklık, belediye onayı</strong> veya <strong class="text-on-surface">özel yetki</strong> iddiası yoktur; yalnızca kamuya açık iletişim bilgisinin kullanımı söz konusudur.</p>
 
-<h2 class="text-xl font-bold text-on-surface pt-5">Güncelleme</h2>
-<p>Veritabanımızdaki iletişim bilgileri <strong class="text-on-surface">düzenli aralıklarla gözden geçirilmeye çalışılır</strong>; yine de adreslerin veya iletişim kanallarının zaman içinde değişmesi doğaldır. Güncel ve kesin bilgi için her zaman <strong class="text-on-surface">ilgili belediyenin resmî internet sitesinde yayımlanan bilgiler esas alınmalıdır</strong>.</p>
-
-<h2 class="text-xl font-bold text-on-surface pt-5">Sorumluluk</h2>
-<p>Uygulama üzerinden yapılan yönlendirme, ilgili kurumun bildirimi alacağı veya belirli bir sürede yanıt vereceği anlamına gelmez. Kurumlar kendi prosedürlerine göre farklı kanalları (telefon, dijital başvuru sistemleri vb.) kullanabilir. Çöp Avcısı, üçüncü taraf kurumların yanıt vermesini veya işlemi sonuçlandırmasını garanti etmez.</p>
-
-<h2 class="text-xl font-bold text-on-surface pt-5">Örnek kayıtlar ve kaynak bağlantıları</h2>
-<p class="text-slate-600 dark:text-slate-400 text-sm">Veritabanımızda örnek olarak yer alan bazı belediyeler için, iletişim bilgilerinin alındığı resmî sayfalar:</p>
-<ul class="list-none space-y-4 pl-0 border-l-2 border-primary/25 pl-4 md:pl-5">
-<li>
-<p class="font-semibold text-on-surface">Karşıyaka Belediyesi</p>
-<p class="text-sm"><span class="text-slate-600 dark:text-slate-400">Kaynak:</span> <a class="text-primary font-semibold underline link-inline decoration-primary/40 break-all" href="https://www.karsiyaka.bel.tr/iletisim" target="_blank" rel="noopener noreferrer">https://www.karsiyaka.bel.tr/iletisim</a></p>
-</li>
-<li>
-<p class="font-semibold text-on-surface">İzmir Büyükşehir Belediyesi</p>
-<p class="text-sm"><span class="text-slate-600 dark:text-slate-400">Kaynak:</span> <a class="text-primary font-semibold underline link-inline decoration-primary/40 break-all" href="https://www.izmir.bel.tr/tr/Iletisim/312" target="_blank" rel="noopener noreferrer">https://www.izmir.bel.tr/tr/Iletisim/312</a></p>
-</li>
-<li>
-<p class="font-semibold text-on-surface">İstanbul Büyükşehir Belediyesi</p>
-<p class="text-sm"><span class="text-slate-600 dark:text-slate-400">Kaynak:</span> <a class="text-primary font-semibold underline link-inline decoration-primary/40 break-all" href="https://ibb.istanbul/ibb/iletisim/" target="_blank" rel="noopener noreferrer">https://ibb.istanbul/ibb/iletisim/</a></p>
-</li>
+<h2 class="text-xl font-bold text-on-surface pt-5">Raporlar nasıl iletilir?</h2>
+<ul class="list-disc pl-5 space-y-2">
+<li>Kullanıcı bir rapor oluşturduğunda, seçilen bölgeye göre sistem <strong class="text-on-surface">e-posta yoluyla</strong> ilgili tarafa (çoğunlukla belediye iletişim adreslerine) iletmeyi <strong class="text-on-surface">dener</strong>.</li>
+<li>Bu özellik bir <strong class="text-on-surface">kolaylık / yönlendirme</strong> işlevidir.</li>
+<li>Kurumun mesajı aldığı, işleme aldığı veya yanıt vereceği <strong class="text-on-surface">garanti edilmez</strong>.</li>
+<li>Kurumlar kendi prosedürlerine göre farklı kanalları (telefon, dijital başvuru, yüz yüze başvuru vb.) kullanabilir.</li>
 </ul>
 
-<h2 class="text-xl font-bold text-on-surface pt-5">İletişim</h2>
-<p>Çöp Avcısı ve bu site hakkında sorularınız için ana sayfamız: <a class="text-primary font-semibold underline link-inline decoration-primary/40" href="https://www.copavcisi.com/">https://www.copavcisi.com/</a></p>
-<p>Destek ve genel iletişim: <a class="text-primary font-semibold underline link-inline decoration-primary/40" href="mailto:contact@monovi.com.tr">contact@monovi.com.tr</a></p>
+<h2 class="text-xl font-bold text-on-surface pt-5">Sınırlar ve sorumluluk</h2>
+<ul class="list-disc pl-5 space-y-2">
+<li>Çöp Avcısı bir <strong class="text-on-surface">üçüncü taraf araçtır</strong>; kullanıcı, önemli başvurularda bilgiyi <strong class="text-on-surface">resmî kaynak üzerinden doğrulamalıdır</strong>.</li>
+<li>Uygulama, kurumun yanıt süresi veya sonuç hakkında <strong class="text-on-surface">taahhüt vermez</strong>; “kesin çözüm”, “garanti” veya “resmî başvuru yerine geçer” gibi bir vaat içermez.</li>
+<li>Üçüncü taraf kurumların yanıt vermesi veya işlemi sonuçlandırması <strong class="text-on-surface">garanti edilmez</strong>.</li>
+</ul>
+
+<h2 class="text-xl font-bold text-on-surface pt-5">Güncellik</h2>
+<p>İletişim bilgileri periyodik olarak gözden geçirilip güncellenmeye çalışılır. Yine de bir çelişki olursa <strong class="text-on-surface">ilgili belediyenin güncel resmî web sitesinde yayımlanan bilgi esastır</strong>.</p>
+
+<h2 class="text-xl font-bold text-on-surface pt-5">İletişim ve ana site</h2>
+<p>Çöp Avcısı ve bu site: <a class="text-primary font-semibold underline link-inline decoration-primary/40" href="https://www.copavcisi.com/">https://www.copavcisi.com/</a></p>
+<p>Destek ve genel iletişim: <a class="text-primary font-semibold underline link-inline decoration-primary/40" href="../iletisim.html">İletişim sayfası</a> ve <a class="text-primary font-semibold underline link-inline decoration-primary/40" href="mailto:contact@monovi.com.tr">contact@monovi.com.tr</a></p>
+
+<section class="pt-8 mt-8 border-t border-slate-200 dark:border-slate-700" lang="en" aria-labelledby="summary-en-heading">
+<h2 id="summary-en-heading" class="text-lg font-bold text-on-surface">Summary (English)</h2>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Çöp Avcısı is an independent civic-tech app (not a government or municipal app). Public contact emails used for routing are taken from each municipality’s official website contact pages through manual, one-by-one verification; bulk scraping of all municipalities is not used. Email forwarding is attempted as a convenience only; delivery, processing, and replies are not guaranteed. For authoritative, up-to-date contact details, users should rely on the municipality’s official website. More information: <a class="text-primary font-semibold underline link-inline decoration-primary/40" href="https://www.copavcisi.com/">https://www.copavcisi.com/</a></p>
+</section>
 </div>
 </article>
 </main>
