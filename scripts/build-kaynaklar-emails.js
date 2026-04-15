@@ -13,22 +13,31 @@ function esc(s) {
     .replace(/"/g, "&quot;");
 }
 
+/** E-posta adresinden yalnızca alan adı (domain); @ ve sol taraf atılır. */
+function domainFromEmail(email) {
+  const s = String(email).trim();
+  const i = s.indexOf("@");
+  return i === -1 ? s : s.slice(i + 1);
+}
+
 const withEmail = d
   .filter((x) => x.email && String(x.email).trim())
   .sort((a, b) => a.name.localeCompare(b.name, "tr"));
 
 const lines = withEmail.map((x) => {
   const n = esc(x.name);
-  const e = esc(x.email);
+  const domain = domainFromEmail(x.email);
+  const dEsc = esc(domain);
   return (
-    `<li><span class="font-medium text-on-surface">${n}</span> — <a class="text-primary font-medium underline link-inline decoration-primary/40 break-all" href="mailto:${e}">${e}</a></li>`
+    `<li><span class="font-medium text-on-surface">${n}</span> — <a class="text-primary font-medium underline link-inline decoration-primary/40 break-all" href="https://${dEsc}" rel="noopener noreferrer">${dEsc}</a></li>`
   );
 });
 
 const withoutEmail = d.length - withEmail.length;
 const html = `
 <h2 class="text-xl font-bold text-on-surface pt-5">Belediye e-posta adresleri</h2>
-<p class="text-sm text-slate-600 dark:text-slate-400">Aşağıdaki liste, <strong class="text-on-surface">${withEmail.length}</strong> belediye için uygulama veri tabanında kayıtlı iletişim e-postasını gösterir (${d.length} kayıttan <strong class="text-on-surface">${withoutEmail}</strong> tanesinde e-posta alanı boş). Güncel ve bağlayıcı bilgi için ilgili belediyenin resmî web sitesini esas alın.</p>
+<p class="text-sm text-slate-600 dark:text-slate-400">Aşağıdaki liste, <strong class="text-on-surface">${withEmail.length}</strong> belediye için uygulama veri tabanında kayıtlı iletişim e-postasının <strong class="text-on-surface">alan adı</strong> (web sitesi) kısmını gösterir (${d.length} kayıttan <strong class="text-on-surface">${withoutEmail}</strong> tanesinde e-posta alanı boş). Güncel ve bağlayıcı bilgi için ilgili belediyenin resmî web sitesini esas alın.</p>
+<p class="text-sm text-slate-600 dark:text-slate-400 mb-3">İlgili belediyeler için güncel ve bağlayıcı bilgide <strong class="text-on-surface">aşağıdaki resmî web sitelerini</strong> esas alın.</p>
 <ul class="list-none pl-0 space-y-2 text-[14px] md:text-[15px] max-h-[70vh] overflow-y-auto border border-slate-200 dark:border-slate-600 rounded-2xl p-4 md:p-5 bg-slate-50/80 dark:bg-slate-900/40">
 ${lines.join("\n")}
 </ul>
