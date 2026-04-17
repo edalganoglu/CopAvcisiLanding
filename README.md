@@ -27,3 +27,13 @@ Metinler genel bilgilendirme amaçlıdır; kesin hukuki bağlayıcılık için y
 ## Mağaza şeffaflığı (Google Play)
 
 Politika uyumu için tam açıklamada kullanabileceğiniz canlı kaynak örneği: ana sayfa ve feragatname metni [https://edalganoglu.github.io/CopAvcisiLanding/](https://edalganoglu.github.io/CopAvcisiLanding/) adresindedir. Gerekirse aynı metne işaret eden doğrudan kullanım koşulları: [kullanim-kosullari.html](https://edalganoglu.github.io/CopAvcisiLanding/kullanim-kosullari.html).
+
+## Admin panel
+
+`admin.html` — bekleyen raporları listeleyen, onayla/reddet akışını yöneten statik sayfa. Navigasyona bağlı değildir; yalnızca doğrudan URL ile erişilir.
+
+- URL: `https://edalganoglu.github.io/CopAvcisiLanding/admin.html`
+- Korumayı `admin-reports` Edge Function sağlar; istekler `X-Admin-Password` header'ı ile yollanır.
+- Supabase Dashboard → Edge Functions → Secrets bölümünde `ADMIN_PANEL_PASSWORD` tanımlı olmalıdır.
+- Akış: raporlar mobilden `approval_status='pending'` olarak Supabase'e düşer, panelden **Onayla** dendiğinde `notify-municipality` tetiklenir ve belediyeye Resend üzerinden mail gider. **Reddet** sadece raporu `rejected` olarak işaretler, mail atılmaz.
+- Supabase proje referansı `admin.html` içindeki `SUPABASE_URL` sabitinde bakımlıdır; farklı bir projeye bağlanacaksan yalnızca o satırı güncelle.
