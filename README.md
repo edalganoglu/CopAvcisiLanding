@@ -36,5 +36,6 @@ Politika uyumu için tam açıklamada kullanabileceğiniz canlı kaynak örneği
 - Korumayı `admin-reports` Edge Function sağlar; istekler `X-Admin-Password` header'ı ile yollanır.
 - Supabase Dashboard → Edge Functions → Secrets bölümünde `ADMIN_PANEL_PASSWORD` tanımlı olmalıdır.
 - Akış: raporlar mobilden `approval_status='pending'` olarak Supabase'e düşer, panelden **Onayla** dendiğinde rapor `approved` olur ve belediye bildirimi **günlük özet e-posta** kuyruğuna alınır (`digest-municipality` + zamanlama; anlık tek mail yok). **Reddet** sadece raporu `rejected` olarak işaretler, mail gitmez.
-- Panel, ikinci bölümde `list_queued` (onaylanmış, `notified_at` boş) raporları **e-posta kuyruğu** olarak salt okunur listeler; **Yenile** her iki listeyi yeniler.
+- Panel, ikinci bölümde `list_queued` (onaylanmış, `notified_at` boş) raporları **e-posta kuyruğu** olarak salt okunur listeler; **Tümünü yenile** bekleyen + kuyruk + reddedilen sayacını günceller.
+- **Reddedilenler:** üstteki istatistik kartına veya nav’daki **Reddedilenler** ile açılan modaldan `list_rejected` çağrılır — **sayfalı** (varsayılan 15/satır, sunucu max 100), **Rapor ID (UUID)** ile tam eşleşme filtresi. Sunucuda `admin-reports` Edge Function’ın bu sürümü deploy edilmiş olmalıdır.
 - Supabase proje referansı `admin.html` içindeki `SUPABASE_URL` sabitinde bakımlıdır; farklı bir projeye bağlanacaksan yalnızca o satırı güncelle.

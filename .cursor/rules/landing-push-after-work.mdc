@@ -1,0 +1,14 @@
+---
+description: Bu repoda yapılan değişikliklerden sonra otomatik commit ve GitHub push
+alwaysApply: true
+---
+
+# CopAvcisiLanding — İş sonrası GitHub’a gönderme
+
+Bu workspace’te (`CopAvcisiLanding`) **herhangi bir dosyada** oluşturma/düzenleme/silme yaptıktan sonra:
+
+1. `git status` ile değişiklikleri doğrula.
+2. Anlamlı, tek bir Türkçe veya İngilizce commit mesajıyla `git add` + `git commit` (gereksiz boş commit yok).
+3. Aktif branch’e `git push` (genelde `origin main`).
+
+İstisna: Kullanıcı açıkça “pushlama / commit atma” dediyse bu adımı atla.
