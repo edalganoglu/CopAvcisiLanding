@@ -18,7 +18,10 @@ Görseller `assets/` altında uygulama reposundan kopyalanan `logo.png` ve `onbo
 
 ## Mağaza linkleri
 
-`index.html` içinde `#indir` bölümündeki App Store ve Google Play bağlantıları şu an `href="#indir"` ve yakında metniyle placeholder. Yayın sonrası gerçek mağaza URL’leriyle değiştirin.
+`index.html` içinde `#indir` bölümünde mağaza bağlantıları:
+
+- **App Store:** `https://apps.apple.com/us/app/%C3%A7%C3%B6p-avc%C4%B1s%C4%B1/id6761179272`
+- **Google Play:** `https://play.google.com/store/apps/details?id=com.monovi.copavcisi`
 
 ## Hukuki metin
 
