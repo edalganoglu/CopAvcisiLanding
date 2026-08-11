@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { resolveMunicipalityReportEmail } from "../_shared/municipality-email-routing.ts";
 
 const ADMIN_PANEL_PASSWORD = Deno.env.get("ADMIN_PANEL_PASSWORD") ?? "";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -65,7 +66,56 @@ interface AdminRequestBody {
 }
 
 const REPORT_SELECT =
-  "id, created_at, updated_at, approved_at, notified_at, category, description, address, city, district, photo_urls, municipality_id, user_id, approval_status, status, email_notify_outcome, latitude, longitude, municipalities:municipality_id ( id, name, email, city, district, email_notifications_enabled, is_active )";
+  "id, created_at, updated_at, approved_at, notified_at, category, description, address, city, district, photo_urls, municipality_id, user_id, approval_status, status, email_notify_outcome, email_notify_to, email_notify_routing, latitude, longitude, municipalities:municipality_id ( id, name, email, city, district, email_notifications_enabled, is_active )";
+
+type ReportWithMuni = {
+  id: string;
+  municipality_id: string | null;
+  city: string | null;
+  district: string | null;
+  email_notify_to?: string | null;
+  email_notify_routing?: string | null;
+  email_to_preview?: string | null;
+  email_routing_preview?: string | null;
+  municipalities?:
+    | { email: string | null; city: string | null }
+    | { email: string | null; city: string | null }[]
+    | null;
+};
+
+function extractMuniEmailCity(m: ReportWithMuni["municipalities"]) {
+  if (!m) return null;
+  return Array.isArray(m) ? m[0] ?? null : m;
+}
+
+/** Fill preview To for reports not yet notified (queue / pending views). */
+async function attachEmailPreview(
+  supabase: SupabaseClient,
+  reports: ReportWithMuni[],
+) {
+  for (const r of reports) {
+    if (r.email_notify_to) {
+      r.email_to_preview = r.email_notify_to;
+      r.email_routing_preview = r.email_notify_routing ?? null;
+      continue;
+    }
+    const muni = extractMuniEmailCity(r.municipalities);
+    if (!r.municipality_id || !muni?.email) {
+      r.email_to_preview = null;
+      r.email_routing_preview = null;
+      continue;
+    }
+    const resolved = await resolveMunicipalityReportEmail(
+      supabase,
+      r.municipality_id,
+      { email: muni.email, city: muni.city },
+      { city: r.city, district: r.district },
+    );
+    r.email_to_preview = resolved?.toEmail ?? null;
+    r.email_routing_preview = resolved?.routing ?? null;
+  }
+  return reports;
+}
 
 function pageParams(body: AdminRequestBody, defaultSize = 20) {
   const page = Math.max(1, Math.floor(Number(body.page) || 1));
@@ -255,8 +305,12 @@ async function handleListReports(supabase: SupabaseClient, body: AdminRequestBod
   }
 
   const total = count ?? 0;
+  const reports = await attachEmailPreview(
+    supabase,
+    (data ?? []) as unknown as ReportWithMuni[],
+  );
   return json({
-    reports: data ?? [],
+    reports,
     total,
     page,
     page_size: pageSize,
@@ -279,7 +333,11 @@ async function handleGetReport(supabase: SupabaseClient, body: AdminRequestBody)
     return json({ error: "get_report_failed", details: error.message }, 500);
   }
   if (!data) return json({ error: "report_not_found" }, 404);
-  return json({ report: data });
+  const [report] = await attachEmailPreview(
+    supabase,
+    [data as unknown as ReportWithMuni],
+  );
+  return json({ report });
 }
 
 async function handleListMunicipalities(supabase: SupabaseClient, body: AdminRequestBody) {
@@ -625,7 +683,7 @@ Deno.serve(async (req) => {
       const { data, error } = await supabase
         .from("reports")
         .select(
-          "id, created_at, approved_at, category, description, address, city, district, photo_urls, municipality_id, user_id, approval_status, email_notify_outcome, municipalities:municipality_id ( id, name, email, city, district )",
+          "id, created_at, approved_at, category, description, address, city, district, photo_urls, municipality_id, user_id, approval_status, email_notify_outcome, email_notify_to, email_notify_routing, municipalities:municipality_id ( id, name, email, city, district )",
         )
         .eq("approval_status", "approved")
         .is("notified_at", null)
@@ -637,7 +695,11 @@ Deno.serve(async (req) => {
         return json({ error: "list_queued_failed", details: error.message }, 500);
       }
 
-      return json({ queued_reports: data ?? [] });
+      const queued_reports = await attachEmailPreview(
+        supabase,
+        (data ?? []) as unknown as ReportWithMuni[],
+      );
+      return json({ queued_reports });
     }
 
     if (action === "list_rejected") {
@@ -744,6 +806,8 @@ Deno.serve(async (req) => {
           status: "not_delivered",
           notified_at: nowIso,
           email_notify_outcome: "skipped_no_recipient" as const,
+          email_notify_to: null,
+          email_notify_routing: "skipped_no_recipient",
         };
 
       const { error: approveErr } = await supabase

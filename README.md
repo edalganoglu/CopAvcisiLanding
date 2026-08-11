@@ -55,4 +55,6 @@ Politika uyumu için tam açıklamada kullanabileceğiniz canlı kaynak örneği
 - Onay → anlık mail yok; `status=queued_for_dispatch`, günlük `digest-municipality` cron’u gönderir.
 - **İletildi:** `email_notify_outcome=sent` (+ genelde `notified_at` dolu). Bounce/open tracking yok.
 - **İletilemedi:** `status=not_delivered` veya `skipped_no_recipient` / `skipped_opt_out`.
+- **Kime (To):** `email_notify_to` — digest’in Resend’e gönderdiği gerçek alıcı; `email_notify_routing` kaynağı (`district_table` = ilçe kutusu, `metropolitan` = büyükşehir, vb.). Kuyruktaki raporlarda henüz yazılmamışsa panel `email_to_preview` ile aynı routing mantığını önizler.
+- Raporlar genelde büyükşehir `municipality_id`’sine bağlı görünür; asıl kutu `municipality_district_emails` üzerinden ilçe adresine çözülür.
 - Supabase proje referansı `admin.html` içindeki `SUPABASE_URL` sabitinde bakımlıdır.
