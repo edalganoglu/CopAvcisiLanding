@@ -33,12 +33,26 @@ Politika uyumu için tam açıklamada kullanabileceğiniz canlı kaynak örneği
 
 ## Admin panel
 
-`admin.html` — bekleyen raporları listeleyen, onayla/reddet akışını yöneten statik sayfa. Navigasyona bağlı değildir; yalnızca doğrudan URL ile erişilir.
+`admin.html` — şifreli kontrol merkezi (dashboard). Navigasyona bağlı değildir; yalnızca doğrudan URL ile erişilir.
 
 - URL: `https://edalganoglu.github.io/CopAvcisiLanding/admin.html`
 - Korumayı `admin-reports` Edge Function sağlar; istekler `X-Admin-Password` header'ı ile yollanır.
 - Supabase Dashboard → Edge Functions → Secrets bölümünde `ADMIN_PANEL_PASSWORD` tanımlı olmalıdır.
-- Akış: raporlar mobilden `approval_status='pending'` olarak Supabase'e düşer, panelden **Onayla** dendiğinde rapor `approved` olur ve belediye bildirimi **günlük özet e-posta** kuyruğuna alınır (`digest-municipality` + zamanlama; anlık tek mail yok). **Reddet** sadece raporu `rejected` olarak işaretler, mail gitmez.
-- Panel, ikinci bölümde `list_queued` (onaylanmış, `notified_at` boş) raporları **e-posta kuyruğu** olarak salt okunur listeler; **Tümünü yenile** bekleyen + kuyruk + reddedilen sayacını günceller.
-- **Reddedilenler:** üstteki istatistik kartına veya nav’daki **Reddedilenler** ile açılan modaldan `list_rejected` çağrılır — **sayfalı** (varsayılan 15/satır, sunucu max 100), **Rapor ID (UUID)** ile tam eşleşme filtresi. Sunucuda `admin-reports` Edge Function’ın bu sürümü deploy edilmiş olmalıdır.
-- Supabase proje referansı `admin.html` içindeki `SUPABASE_URL` sabitinde bakımlıdır; farklı bir projeye bağlanacaksan yalnızca o satırı güncelle.
+- Kaynak (bakım): [`supabase/functions/admin-reports/index.ts`](supabase/functions/admin-reports/index.ts) — deploy CivicReport projesi (`jxmorcxbzsdsrylrqsbz`), `verify_jwt: false`.
+
+### Sekmeler
+
+| Sekme | Ne yapar |
+|--------|-----------|
+| **Özet** | KPI’lar (bekleyen / kuyruk / iletildi / iletilemedi / reddedilen), 7–30 gün sayıları, belediye/kullanıcı özeti, son iletilen & bekleyen |
+| **Moderasyon** | Bekleyen onay/red + günlük özet e-posta kuyruğu (`list` / `list_queued` / `approve` / `reject`) |
+| **Raporlar** | Tüm raporlar; pipeline filtresi (bekliyor / kuyrukta / iletildi / iletilemedi / reddedildi), şehir / arama / UUID, detay drawer (`list_reports` / `get_report`) |
+| **Belediyeler** | Arama, opt-out / aktif / e-posta yok filtreleri; e-posta & bildirim güncelleme; yeni belediye; ilçe e-postaları (`list_municipalities` / `update_municipality` / `create_municipality` / `list_district_emails` / `upsert_district_email`) |
+| **Kullanıcılar** | `profiles` listesi; rol / tip / belediye ID güncelleme (`list_users` / `update_user`) |
+
+### İletim alanları
+
+- Onay → anlık mail yok; `status=queued_for_dispatch`, günlük `digest-municipality` cron’u gönderir.
+- **İletildi:** `email_notify_outcome=sent` (+ genelde `notified_at` dolu). Bounce/open tracking yok.
+- **İletilemedi:** `status=not_delivered` veya `skipped_no_recipient` / `skipped_opt_out`.
+- Supabase proje referansı `admin.html` içindeki `SUPABASE_URL` sabitinde bakımlıdır.

@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="robots" content="noindex, nofollow"/>
-<meta name="description" content="Çöp Avcısı — admin onay paneli."/>
+<meta name="description" content="Çöp Avcısı — admin kontrol merkezi."/>
 <title>Admin — Çöp Avcısı</title>
 <link rel="icon" type="image/png" href="assets/logo.png"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -20,6 +20,12 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .modal-enter { animation: modalIn 0.2s ease-out; }
   @keyframes modalIn { from { opacity: 0; transform: scale(0.98) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+  .tab-panel { min-height: 28rem; }
+  .tab-btn[aria-selected="true"] {
+    color: #006438;
+    border-bottom-color: #006438;
+    background: rgba(0,100,56,0.06);
+  }
 </style>
 </head>
 <body class="bg-surface text-on-surface font-body min-h-screen">
@@ -34,9 +40,9 @@
     </a>
     <div class="flex items-center gap-2 sm:gap-3 text-sm flex-wrap justify-end">
       <span class="hidden sm:inline-block px-3 py-1 rounded-full bg-primary/10 text-primary font-semibold text-xs tracking-wide">ADMIN PANEL</span>
-      <button type="button" id="openRejectedModalBtn" class="hidden-important inline-flex items-center gap-2 bg-slate-900 text-white font-semibold px-4 py-2 rounded-full hover:bg-slate-800 text-sm shadow-sm">
-        <span class="material-symbols-outlined text-base">block</span>
-        Reddedilenler
+      <button type="button" id="refreshBtn" class="hidden-important inline-flex items-center gap-2 bg-white border border-slate-300 text-slate-700 font-semibold px-4 py-2 rounded-full hover:bg-slate-50 text-sm shadow-sm">
+        <span class="material-symbols-outlined text-base">refresh</span>
+        Yenile
       </button>
       <button id="logoutBtn" class="hidden-important text-slate-700 hover:text-red-600 font-semibold text-sm px-3 py-2 rounded-full border border-slate-300 hover:border-red-200 transition-colors">
         Çıkış
@@ -45,9 +51,8 @@
   </div>
 </nav>
 
-<main class="pt-28 pb-24 px-6 max-w-6xl mx-auto">
+<main class="pt-28 pb-24 px-6 max-w-7xl mx-auto">
 
-  <!-- Login view -->
   <section id="loginView" class="card-legal bg-white border border-slate-200 rounded-[2rem] p-8 md:p-12 max-w-md mx-auto shadow-sm">
     <div class="flex items-center gap-3 mb-6">
       <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
@@ -55,7 +60,7 @@
       </div>
       <div>
         <h1 class="text-xl font-bold text-on-surface tracking-tight">Admin girişi</h1>
-        <p class="text-xs text-slate-600">Bekleyen raporları onaylamak için şifre gerekli.</p>
+        <p class="text-xs text-slate-600">Kontrol merkezine erişmek için şifre gerekli.</p>
       </div>
     </div>
     <form id="loginForm" class="space-y-4">
@@ -68,39 +73,130 @@
               class="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary-container transition-colors">
         Giriş yap
       </button>
-      <p id="loginError" class="text-sm text-red-600 hidden"></p>
+      <p id="loginError" class="text-sm text-red-600 min-h-[1.25rem]" aria-live="polite"></p>
     </form>
   </section>
 
-  <!-- App view -->
   <section id="appView" class="hidden-important">
-    <header class="mb-10">
+    <header class="mb-6">
       <p class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Kontrol merkezi</p>
-      <div class="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 class="text-3xl md:text-[2.125rem] font-extrabold tracking-[-0.03em] text-on-surface leading-tight">
-            Rapor onayı ve kuyruk
-          </h1>
-          <p class="text-sm text-slate-600 mt-2 max-w-xl">
-            Moderasyon sırasına göre bekleyen raporları işleyin. Onaylananlar günlük özet e-postasında belediyelere çıkar;
-            reddedilenler arşive alınır ve aşağıdan ayrı listelenir.
-          </p>
+      <h1 class="text-3xl md:text-[2.125rem] font-extrabold tracking-[-0.03em] text-on-surface leading-tight">
+        Admin dashboard
+      </h1>
+      <p class="text-sm text-slate-600 mt-2 max-w-2xl min-h-[2.5rem]">
+        Rapor moderasyonu, iletim durumu, belediye e-posta ayarları ve kullanıcılar.
+      </p>
+    </header>
+
+    <div class="border-b border-slate-200 mb-8 overflow-x-auto" role="tablist" aria-label="Admin sekmeleri">
+      <div class="flex min-w-max gap-1">
+        <button type="button" role="tab" class="tab-btn px-4 py-3 text-sm font-semibold text-slate-600 border-b-2 border-transparent whitespace-nowrap" data-tab="overview" aria-selected="true">Özet</button>
+        <button type="button" role="tab" class="tab-btn px-4 py-3 text-sm font-semibold text-slate-600 border-b-2 border-transparent whitespace-nowrap" data-tab="moderation" aria-selected="false">Moderasyon</button>
+        <button type="button" role="tab" class="tab-btn px-4 py-3 text-sm font-semibold text-slate-600 border-b-2 border-transparent whitespace-nowrap" data-tab="reports" aria-selected="false">Raporlar</button>
+        <button type="button" role="tab" class="tab-btn px-4 py-3 text-sm font-semibold text-slate-600 border-b-2 border-transparent whitespace-nowrap" data-tab="municipalities" aria-selected="false">Belediyeler</button>
+        <button type="button" role="tab" class="tab-btn px-4 py-3 text-sm font-semibold text-slate-600 border-b-2 border-transparent whitespace-nowrap" data-tab="users" aria-selected="false">Kullanıcılar</button>
+      </div>
+    </div>
+
+    <!-- Özet -->
+    <div id="tab-overview" class="tab-panel" role="tabpanel">
+      <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 mb-8">
+        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Toplam</p>
+          <p class="text-2xl font-black tabular-nums mt-1" id="statTotal">—</p>
         </div>
-        <button type="button" id="refreshBtn"
-                class="inline-flex items-center gap-2 bg-white border border-slate-300 text-slate-700 font-semibold px-5 py-2.5 rounded-full hover:bg-slate-50 hover:border-slate-400 text-sm shadow-sm">
-          <span class="material-symbols-outlined text-base">refresh</span> Tümünü yenile
-        </button>
+        <div class="rounded-2xl border border-emerald-200/80 bg-gradient-to-br from-white to-emerald-50/50 p-4 shadow-sm">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-800/70">Bekleyen</p>
+          <p class="text-2xl font-black text-emerald-900 tabular-nums mt-1" id="statPending">—</p>
+        </div>
+        <div class="rounded-2xl border border-amber-200/80 bg-gradient-to-br from-white to-amber-50/40 p-4 shadow-sm">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-amber-900/70">Kuyruk</p>
+          <p class="text-2xl font-black text-amber-900 tabular-nums mt-1" id="statQueued">—</p>
+        </div>
+        <div class="rounded-2xl border border-sky-200/80 bg-gradient-to-br from-white to-sky-50/50 p-4 shadow-sm">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-sky-800/70">İletildi</p>
+          <p class="text-2xl font-black text-sky-900 tabular-nums mt-1" id="statDelivered">—</p>
+        </div>
+        <div class="rounded-2xl border border-orange-200/80 bg-white p-4 shadow-sm">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-orange-800/70">İletilemedi</p>
+          <p class="text-2xl font-black text-orange-900 tabular-nums mt-1" id="statNotDelivered">—</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Reddedilen</p>
+          <p class="text-2xl font-black tabular-nums mt-1" id="statRejected">—</p>
+        </div>
       </div>
 
-      <!-- Stat cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-8">
+        <div class="rounded-2xl border border-slate-200 bg-white p-4">
+          <p class="text-xs text-slate-500 font-semibold">Son 7 gün · oluşturulan</p>
+          <p class="text-xl font-black tabular-nums mt-1" id="statCreated7">—</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-4">
+          <p class="text-xs text-slate-500 font-semibold">Son 7 gün · onaylanan</p>
+          <p class="text-xl font-black tabular-nums mt-1" id="statApproved7">—</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-4">
+          <p class="text-xs text-slate-500 font-semibold">Son 7 gün · iletilen</p>
+          <p class="text-xl font-black tabular-nums mt-1" id="statDelivered7">—</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-4">
+          <p class="text-xs text-slate-500 font-semibold">Son 30 gün · oluşturulan</p>
+          <p class="text-xl font-black tabular-nums mt-1" id="statCreated30">—</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
+        <div class="rounded-2xl border border-slate-200 bg-white p-4">
+          <p class="text-xs text-slate-500 font-semibold">Belediye</p>
+          <p class="text-xl font-black tabular-nums mt-1" id="statMuniTotal">—</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-4">
+          <p class="text-xs text-slate-500 font-semibold">E-posta opt-out</p>
+          <p class="text-xl font-black tabular-nums mt-1" id="statMuniOptOut">—</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-4">
+          <p class="text-xs text-slate-500 font-semibold">Kullanıcı</p>
+          <p class="text-xl font-black tabular-nums mt-1" id="statUsers">—</p>
+        </div>
+      </div>
+
+      <div id="overviewError" class="hidden mb-4 bg-red-50 border border-red-200 rounded-2xl p-4 text-sm text-red-800"></div>
+      <div id="overviewLoading" class="hidden text-center py-10 text-slate-500 text-sm">
+        <span class="spinner"></span>
+        <p class="mt-3">Özet yükleniyor…</p>
+      </div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+        <div>
+          <h2 class="text-lg font-bold mb-3 flex items-center gap-2">
+            <span class="material-symbols-outlined text-sky-700">outgoing_mail</span>
+            Son iletilenler
+          </h2>
+          <ul id="recentDeliveredList" class="space-y-3"></ul>
+          <p id="recentDeliveredEmpty" class="hidden text-sm text-slate-500 py-8 text-center border border-dashed border-slate-200 rounded-2xl">Kayıt yok.</p>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold mb-3 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">pending_actions</span>
+            Son bekleyenler
+          </h2>
+          <ul id="recentPendingList" class="space-y-3"></ul>
+          <p id="recentPendingEmpty" class="hidden text-sm text-slate-500 py-8 text-center border border-dashed border-slate-200 rounded-2xl">Kayıt yok.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Moderasyon -->
+    <div id="tab-moderation" class="tab-panel hidden-important" role="tabpanel">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         <div class="rounded-2xl border border-emerald-200/80 bg-gradient-to-br from-white to-emerald-50/50 p-5 shadow-sm">
           <div class="flex items-center justify-between gap-2 mb-3">
             <span class="text-xs font-bold uppercase tracking-wider text-emerald-800/70">Moderasyon bekleyen</span>
             <span class="material-symbols-outlined text-emerald-700 text-xl">hourglass_empty</span>
           </div>
           <p class="text-3xl font-black text-emerald-900 tabular-nums" id="countBadge">0</p>
-          <p class="text-xs text-slate-600 mt-1">Onay veya red bekleyen raporlar</p>
+          <p class="text-xs text-slate-600 mt-1 min-h-[1rem]">Onay veya red bekleyen raporlar</p>
         </div>
         <div class="rounded-2xl border border-amber-200/80 bg-gradient-to-br from-white to-amber-50/40 p-5 shadow-sm">
           <div class="flex items-center justify-between gap-2 mb-3">
@@ -108,126 +204,294 @@
             <span class="material-symbols-outlined text-amber-700 text-xl">schedule_send</span>
           </div>
           <p class="text-3xl font-black text-amber-900 tabular-nums" id="queueCountBadge">0</p>
-          <p class="text-xs text-slate-600 mt-1">Özet postaya henüz dahil edilmemiş onaylı raporlar</p>
+          <p class="text-xs text-slate-600 mt-1 min-h-[1rem]">Özet postaya henüz dahil edilmemiş onaylı raporlar</p>
         </div>
-        <button type="button" id="openRejectedModalBtn2"
-                class="text-left rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-slate-300 hover:shadow-md transition-all group">
-          <div class="flex items-center justify-between gap-2 mb-3">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-600">Reddedilenler</span>
-            <span class="material-symbols-outlined text-slate-500 text-xl group-hover:text-slate-800">open_in_new</span>
+      </div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 xl:gap-10">
+        <div class="space-y-4">
+          <div class="flex items-center gap-2 border-b border-slate-200 pb-3">
+            <span class="material-symbols-outlined text-primary">pending_actions</span>
+            <h2 class="text-lg font-bold text-on-surface">İşlem bekleyen raporlar</h2>
           </div>
-          <p class="text-3xl font-black text-slate-900 tabular-nums" id="rejectedStatCount">—</p>
-          <p class="text-xs text-slate-600 mt-1">Tıklayın — sayfalı liste ve rapor ID filtre</p>
+          <p class="text-xs text-slate-600 min-h-[2.625rem] leading-relaxed">Onay veya red verin; onaylananlar sağdaki günlük özet kuyruğuna düşer.</p>
+          <div id="listState" class="text-center py-12 text-slate-500 text-sm hidden rounded-2xl border border-dashed border-slate-200 bg-white/60">
+            <span class="spinner"></span>
+            <p class="mt-3">Yükleniyor…</p>
+          </div>
+          <div id="emptyState" class="hidden text-center py-14 bg-white rounded-2xl border border-dashed border-slate-300">
+            <span class="material-symbols-outlined text-5xl text-slate-300">inbox</span>
+            <p class="mt-2 text-slate-700 font-semibold">Bekleyen rapor yok</p>
+            <p class="text-xs text-slate-500 mt-1">Yeni raporlar burada listelenir.</p>
+          </div>
+          <div id="errorState" class="hidden bg-red-50 border border-red-200 rounded-2xl p-4 text-sm text-red-800"></div>
+          <ul id="reportsList" class="space-y-4"></ul>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-center gap-2 border-b border-amber-200/80 pb-3">
+            <span class="material-symbols-outlined text-amber-700">mail</span>
+            <h2 class="text-lg font-bold text-on-surface">Günlük özet e-posta kuyruğu</h2>
+          </div>
+          <p class="text-xs text-slate-600 min-h-[2.625rem] leading-relaxed">Salt okunur. Zamanlanan gönderimde belediyelere gider.</p>
+          <div id="queueListState" class="text-center py-10 text-slate-500 text-sm hidden rounded-2xl border border-dashed border-amber-100 bg-amber-50/20">
+            <span class="spinner"></span>
+            <p class="mt-3">Kuyruk yükleniyor…</p>
+          </div>
+          <div id="queueEmptyState" class="hidden text-center py-12 bg-amber-50/40 rounded-2xl border border-dashed border-amber-200/80">
+            <span class="material-symbols-outlined text-5xl text-amber-200">schedule_send</span>
+            <p class="mt-2 text-slate-700 font-semibold">Kuyrukta rapor yok</p>
+            <p class="text-xs text-slate-500 mt-1">Onayladıkça burada görünür.</p>
+          </div>
+          <div id="queueErrorState" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-4 text-sm text-amber-900"></div>
+          <ul id="queueList" class="space-y-4 max-h-[min(70vh,720px)] overflow-y-auto pr-1"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Raporlar -->
+    <div id="tab-reports" class="tab-panel hidden-important" role="tabpanel">
+      <div class="flex flex-col lg:flex-row gap-3 mb-4">
+        <label class="flex-1 block">
+          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Durum</span>
+          <select id="repPipeline" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm">
+            <option value="all">Tümü</option>
+            <option value="pending">Bekliyor</option>
+            <option value="queued">Kuyrukta</option>
+            <option value="delivered">İletildi</option>
+            <option value="not_delivered">İletilemedi</option>
+            <option value="rejected">Reddedildi</option>
+          </select>
+        </label>
+        <label class="flex-1 block">
+          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Şehir</span>
+          <input id="repCity" type="text" placeholder="örn. İstanbul" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+        </label>
+        <label class="flex-1 block">
+          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Arama</span>
+          <input id="repQ" type="text" placeholder="Adres veya açıklama" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+        </label>
+        <label class="flex-1 block">
+          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Rapor ID</span>
+          <input id="repId" type="text" placeholder="UUID" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm font-mono"/>
+        </label>
+      </div>
+      <div class="flex flex-wrap gap-2 mb-6">
+        <button type="button" id="repApply" class="bg-primary text-white font-semibold px-4 py-2.5 rounded-xl text-sm hover:bg-primary-container">Filtrele</button>
+        <button type="button" id="repClear" class="bg-slate-100 text-slate-800 font-semibold px-4 py-2.5 rounded-xl text-sm hover:bg-slate-200">Temizle</button>
+        <p class="text-sm text-slate-600 self-center ml-auto tabular-nums" id="repPageLabel">—</p>
+      </div>
+      <div id="repListState" class="hidden text-center py-10 text-slate-500 text-sm"><span class="spinner"></span><p class="mt-2">Yükleniyor…</p></div>
+      <div id="repErrorState" class="hidden bg-red-50 border border-red-200 rounded-2xl p-4 text-sm text-red-800 mb-4"></div>
+      <div id="repEmptyState" class="hidden text-center py-12 text-slate-500 text-sm border border-dashed border-slate-200 rounded-2xl">Kayıt yok.</div>
+      <ul id="allReportsList" class="space-y-3 mb-6"></ul>
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <button type="button" id="repPrev" class="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 px-4 py-2 rounded-full border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none">
+          <span class="material-symbols-outlined text-base">chevron_left</span> Önceki
+        </button>
+        <button type="button" id="repNext" class="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 px-4 py-2 rounded-full border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none">
+          Sonraki <span class="material-symbols-outlined text-base">chevron_right</span>
         </button>
       </div>
-    </header>
+    </div>
 
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 xl:gap-10">
-      <!-- Pending column -->
-      <div class="space-y-4">
-        <div class="flex items-center gap-2 border-b border-slate-200 pb-3">
-          <span class="material-symbols-outlined text-primary">pending_actions</span>
-          <h2 class="text-lg font-bold text-on-surface">İşlem bekleyen raporlar</h2>
-        </div>
-        <p class="text-xs text-slate-600 mt-2 mb-2 min-h-[2.625rem] leading-relaxed">Onay veya red verin; onaylananlar sağdaki günlük özet kuyruğuna düşer.</p>
-
-        <div id="listState" class="text-center py-12 text-slate-500 text-sm hidden rounded-2xl border border-dashed border-slate-200 bg-white/60">
-          <span class="spinner"></span>
-          <p class="mt-3">Yükleniyor…</p>
-        </div>
-
-        <div id="emptyState" class="hidden text-center py-14 bg-white rounded-2xl border border-dashed border-slate-300">
-          <span class="material-symbols-outlined text-5xl text-slate-300">inbox</span>
-          <p class="mt-2 text-slate-700 font-semibold">Bekleyen rapor yok</p>
-          <p class="text-xs text-slate-500 mt-1">Yeni raporlar burada listelenir.</p>
-        </div>
-
-        <div id="errorState" class="hidden bg-red-50 border border-red-200 rounded-2xl p-4 text-sm text-red-800"></div>
-
-        <ul id="reportsList" class="space-y-4"></ul>
+    <!-- Belediyeler -->
+    <div id="tab-municipalities" class="tab-panel hidden-important" role="tabpanel">
+      <div class="flex flex-col lg:flex-row gap-3 mb-4">
+        <label class="flex-1 block">
+          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Ara</span>
+          <input id="muniQ" type="text" placeholder="Ad, şehir, ilçe, e-posta" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+        </label>
+        <label class="block min-w-[10rem]">
+          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Bildirim</span>
+          <select id="muniNotify" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm">
+            <option value="">Tümü</option>
+            <option value="true">Açık</option>
+            <option value="false">Kapalı (opt-out)</option>
+          </select>
+        </label>
+        <label class="block min-w-[10rem]">
+          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Aktif</span>
+          <select id="muniActive" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm">
+            <option value="">Tümü</option>
+            <option value="true">Aktif</option>
+            <option value="false">Pasif</option>
+          </select>
+        </label>
+        <label class="flex items-end gap-2 pb-1 min-w-[9rem]">
+          <input id="muniMissingEmail" type="checkbox" class="rounded border-slate-300 text-primary focus:ring-primary"/>
+          <span class="text-xs font-semibold text-slate-700">E-posta yok</span>
+        </label>
       </div>
+      <div class="flex flex-wrap gap-2 mb-6">
+        <button type="button" id="muniApply" class="bg-primary text-white font-semibold px-4 py-2.5 rounded-xl text-sm">Filtrele</button>
+        <button type="button" id="muniClear" class="bg-slate-100 text-slate-800 font-semibold px-4 py-2.5 rounded-xl text-sm">Temizle</button>
+        <button type="button" id="muniCreateOpen" class="ml-auto bg-slate-900 text-white font-semibold px-4 py-2.5 rounded-xl text-sm hover:bg-slate-800">+ Yeni belediye</button>
+        <p class="text-sm text-slate-600 self-center tabular-nums w-full sm:w-auto sm:ml-0" id="muniPageLabel">—</p>
+      </div>
+      <div id="muniListState" class="hidden text-center py-10 text-slate-500 text-sm"><span class="spinner"></span><p class="mt-2">Yükleniyor…</p></div>
+      <div id="muniErrorState" class="hidden bg-red-50 border border-red-200 rounded-2xl p-4 text-sm text-red-800 mb-4"></div>
+      <div id="muniEmptyState" class="hidden text-center py-12 text-slate-500 text-sm border border-dashed border-slate-200 rounded-2xl">Kayıt yok.</div>
+      <ul id="muniList" class="space-y-3 mb-6"></ul>
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <button type="button" id="muniPrev" class="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 px-4 py-2 rounded-full border border-slate-300 bg-white disabled:opacity-40 disabled:pointer-events-none">
+          <span class="material-symbols-outlined text-base">chevron_left</span> Önceki
+        </button>
+        <button type="button" id="muniNext" class="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 px-4 py-2 rounded-full border border-slate-300 bg-white disabled:opacity-40 disabled:pointer-events-none">
+          Sonraki <span class="material-symbols-outlined text-base">chevron_right</span>
+        </button>
+      </div>
+    </div>
 
-      <!-- Queue column -->
-      <div class="space-y-4">
-        <div class="flex items-center gap-2 border-b border-amber-200/80 pb-3">
-          <span class="material-symbols-outlined text-amber-700">mail</span>
-          <h2 class="text-lg font-bold text-on-surface">Günlük özet e-posta kuyruğu</h2>
-        </div>
-        <p class="text-xs text-slate-600 mt-2 mb-2 min-h-[2.625rem] leading-relaxed">Salt okunur. Zamanlanan gönderimde belediyelere gider.</p>
-
-        <div id="queueListState" class="text-center py-10 text-slate-500 text-sm hidden rounded-2xl border border-dashed border-amber-100 bg-amber-50/20">
-          <span class="spinner"></span>
-          <p class="mt-3">Kuyruk yükleniyor…</p>
-        </div>
-
-        <div id="queueEmptyState" class="hidden text-center py-12 bg-amber-50/40 rounded-2xl border border-dashed border-amber-200/80">
-          <span class="material-symbols-outlined text-5xl text-amber-200">schedule_send</span>
-          <p class="mt-2 text-slate-700 font-semibold">Kuyrukta rapor yok</p>
-          <p class="text-xs text-slate-500 mt-1">Onayladıkça burada görünür.</p>
-        </div>
-
-        <div id="queueErrorState" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-4 text-sm text-amber-900"></div>
-
-        <ul id="queueList" class="space-y-4 max-h-[min(70vh,720px)] overflow-y-auto pr-1"></ul>
+    <!-- Kullanıcılar -->
+    <div id="tab-users" class="tab-panel hidden-important" role="tabpanel">
+      <div class="flex flex-col lg:flex-row gap-3 mb-4">
+        <label class="flex-1 block">
+          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Ara</span>
+          <input id="userQ" type="text" placeholder="Kullanıcı adı veya ad" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+        </label>
+        <label class="block min-w-[10rem]">
+          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Rol</span>
+          <input id="userRole" type="text" placeholder="örn. citizen" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+        </label>
+        <label class="block min-w-[10rem]">
+          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Tip</span>
+          <input id="userType" type="text" placeholder="örn. individual" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+        </label>
+      </div>
+      <div class="flex flex-wrap gap-2 mb-6">
+        <button type="button" id="userApply" class="bg-primary text-white font-semibold px-4 py-2.5 rounded-xl text-sm">Filtrele</button>
+        <button type="button" id="userClear" class="bg-slate-100 text-slate-800 font-semibold px-4 py-2.5 rounded-xl text-sm">Temizle</button>
+        <p class="text-sm text-slate-600 self-center ml-auto tabular-nums" id="userPageLabel">—</p>
+      </div>
+      <div id="userListState" class="hidden text-center py-10 text-slate-500 text-sm"><span class="spinner"></span><p class="mt-2">Yükleniyor…</p></div>
+      <div id="userErrorState" class="hidden bg-red-50 border border-red-200 rounded-2xl p-4 text-sm text-red-800 mb-4"></div>
+      <div id="userEmptyState" class="hidden text-center py-12 text-slate-500 text-sm border border-dashed border-slate-200 rounded-2xl">Kayıt yok.</div>
+      <ul id="userList" class="space-y-3 mb-6"></ul>
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <button type="button" id="userPrev" class="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 px-4 py-2 rounded-full border border-slate-300 bg-white disabled:opacity-40 disabled:pointer-events-none">
+          <span class="material-symbols-outlined text-base">chevron_left</span> Önceki
+        </button>
+        <button type="button" id="userNext" class="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 px-4 py-2 rounded-full border border-slate-300 bg-white disabled:opacity-40 disabled:pointer-events-none">
+          Sonraki <span class="material-symbols-outlined text-base">chevron_right</span>
+        </button>
       </div>
     </div>
   </section>
-
 </main>
 
-<!-- Rejected reports modal -->
-<div id="rejectedModal" class="hidden fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-8 overflow-y-auto bg-slate-900/50 backdrop-blur-sm" aria-hidden="true">
-  <div class="modal-enter w-full max-w-3xl bg-white rounded-2xl shadow-2xl border border-slate-200 my-4 sm:my-12 max-h-[90vh] flex flex-col">
-    <div class="flex items-start justify-between gap-4 p-5 sm:p-6 border-b border-slate-100 shrink-0">
+<!-- Report detail drawer -->
+<div id="reportDrawer" class="hidden fixed inset-0 z-50" aria-hidden="true">
+  <div class="absolute inset-0 bg-slate-900/45 backdrop-blur-sm" data-close-drawer></div>
+  <aside class="modal-enter absolute right-0 top-0 h-full w-full max-w-lg bg-white shadow-2xl border-l border-slate-200 flex flex-col overflow-hidden">
+    <div class="flex items-start justify-between gap-3 p-5 border-b border-slate-100 shrink-0">
       <div>
-        <h2 class="text-xl font-extrabold text-on-surface tracking-tight">Reddedilen raporlar</h2>
-        <p class="text-xs text-slate-600 mt-1">Sayfalı liste. Rapor ID ile tam eşleşme filtreler.</p>
+        <h2 class="text-lg font-extrabold tracking-tight">Rapor detayı</h2>
+        <p class="text-[11px] font-mono text-slate-500 break-all mt-1 select-all" id="drawerReportId"></p>
       </div>
-      <button type="button" id="closeRejectedModal" class="p-2 rounded-full hover:bg-slate-100 text-slate-600" aria-label="Kapat">
+      <button type="button" class="p-2 rounded-full hover:bg-slate-100" data-close-drawer aria-label="Kapat">
         <span class="material-symbols-outlined">close</span>
       </button>
     </div>
+    <div id="drawerBody" class="flex-1 overflow-y-auto p-5 text-sm"></div>
+  </aside>
+</div>
 
-    <div class="p-5 sm:p-6 border-b border-slate-100 shrink-0 space-y-3">
-      <div class="flex flex-col sm:flex-row gap-3 sm:items-end">
-        <label class="flex-1 block">
-          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Rapor ID</span>
-          <input type="text" id="rejectedFilterId" placeholder="UUID yapıştırın (opsiyonel)"
-                 class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm font-mono focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
-        </label>
-        <div class="flex gap-2 shrink-0">
-          <button type="button" id="rejectedFilterApply"
-                  class="bg-primary text-white font-semibold px-4 py-2.5 rounded-xl text-sm hover:bg-primary-container">
-            Filtrele
-          </button>
-          <button type="button" id="rejectedFilterClear"
-                  class="bg-slate-100 text-slate-800 font-semibold px-4 py-2.5 rounded-xl text-sm hover:bg-slate-200">
-            Temizle
-          </button>
-        </div>
+<!-- Municipality edit modal -->
+<div id="muniModal" class="hidden fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-8 overflow-y-auto bg-slate-900/50 backdrop-blur-sm" aria-hidden="true">
+  <div class="modal-enter w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 my-4 sm:my-12 flex flex-col max-h-[90vh]">
+    <div class="flex items-start justify-between gap-4 p-5 sm:p-6 border-b border-slate-100 shrink-0">
+      <div>
+        <h2 class="text-xl font-extrabold tracking-tight" id="muniModalTitle">Belediye</h2>
+        <p class="text-xs text-slate-600 mt-1" id="muniModalSub">E-posta ve bildirim ayarları</p>
       </div>
-    </div>
-
-    <div id="rejectedListState" class="hidden text-center py-10 text-slate-500 text-sm shrink-0">
-      <span class="spinner"></span>
-      <p class="mt-2">Yükleniyor…</p>
-    </div>
-    <div id="rejectedErrorState" class="hidden mx-5 sm:mx-6 mt-4 bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-800 shrink-0"></div>
-    <div id="rejectedEmptyState" class="hidden text-center py-12 text-slate-500 text-sm">Kayıt yok.</div>
-
-    <ul id="rejectedList" class="flex-1 overflow-y-auto min-h-0 px-5 sm:px-6 py-4 space-y-3"></ul>
-
-    <div class="flex flex-wrap items-center justify-between gap-3 p-5 sm:p-6 border-t border-slate-100 bg-slate-50/80 rounded-b-2xl shrink-0">
-      <button type="button" id="rejPrev"
-              class="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 px-4 py-2 rounded-full border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none">
-        <span class="material-symbols-outlined text-base">chevron_left</span> Önceki
-      </button>
-      <p class="text-sm text-slate-600 text-center font-medium" id="rejPageLabel">Sayfa 1 / 1</p>
-      <button type="button" id="rejNext"
-              class="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 px-4 py-2 rounded-full border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none">
-        Sonraki <span class="material-symbols-outlined text-base">chevron_right</span>
+      <button type="button" id="muniModalClose" class="p-2 rounded-full hover:bg-slate-100" aria-label="Kapat">
+        <span class="material-symbols-outlined">close</span>
       </button>
     </div>
+    <form id="muniForm" class="p-5 sm:p-6 space-y-4 overflow-y-auto">
+      <input type="hidden" id="muniEditId"/>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="muniCreateFields">
+        <label class="block sm:col-span-2">
+          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Ad *</span>
+          <input id="muniName" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+        </label>
+        <label class="block">
+          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Şehir *</span>
+          <input id="muniCity" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+        </label>
+        <label class="block">
+          <span class="block text-xs font-semibold text-slate-600 mb-1.5">İlçe *</span>
+          <input id="muniDistrict" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+        </label>
+      </div>
+      <label class="block">
+        <span class="block text-xs font-semibold text-slate-600 mb-1.5">E-posta</span>
+        <input id="muniEmail" type="email" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+      </label>
+      <label class="block">
+        <span class="block text-xs font-semibold text-slate-600 mb-1.5">WhatsApp</span>
+        <input id="muniWhatsapp" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+      </label>
+      <div class="flex flex-wrap gap-4" id="muniEditFlags">
+        <label class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+          <input id="muniEmailEnabled" type="checkbox" class="rounded border-slate-300 text-primary focus:ring-primary"/>
+          E-posta bildirimi açık
+        </label>
+        <label class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+          <input id="muniIsActive" type="checkbox" class="rounded border-slate-300 text-primary focus:ring-primary"/>
+          Aktif
+        </label>
+      </div>
+      <div id="districtEmailsSection" class="hidden border-t border-slate-100 pt-4 space-y-3">
+        <h3 class="text-sm font-bold">İlçe e-postaları</h3>
+        <ul id="districtEmailList" class="space-y-2 text-xs"></ul>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <input id="distKey" type="text" placeholder="İlçe anahtarı" class="rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+          <input id="distEmail" type="email" placeholder="E-posta" class="rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+          <input id="distKep" type="email" placeholder="KEP" class="rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+        </div>
+        <button type="button" id="distUpsertBtn" class="bg-slate-100 text-slate-800 font-semibold px-3 py-2 rounded-xl text-sm hover:bg-slate-200">İlçe e-posta kaydet</button>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" id="muniModalCancel" class="px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-300">İptal</button>
+        <button type="submit" id="muniSaveBtn" class="bg-primary text-white font-bold px-5 py-2.5 rounded-xl text-sm">Kaydet</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- User edit modal -->
+<div id="userModal" class="hidden fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-8 overflow-y-auto bg-slate-900/50 backdrop-blur-sm" aria-hidden="true">
+  <div class="modal-enter w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 my-8 p-6">
+    <div class="flex items-start justify-between gap-3 mb-4">
+      <div>
+        <h2 class="text-lg font-extrabold">Kullanıcı düzenle</h2>
+        <p class="text-[11px] font-mono text-slate-500 break-all mt-1" id="userEditIdLabel"></p>
+      </div>
+      <button type="button" id="userModalClose" class="p-2 rounded-full hover:bg-slate-100" aria-label="Kapat">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <form id="userForm" class="space-y-3">
+      <input type="hidden" id="userEditId"/>
+      <label class="block">
+        <span class="block text-xs font-semibold text-slate-600 mb-1.5">Rol</span>
+        <input id="userEditRole" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+      </label>
+      <label class="block">
+        <span class="block text-xs font-semibold text-slate-600 mb-1.5">Tip</span>
+        <input id="userEditType" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+      </label>
+      <label class="block">
+        <span class="block text-xs font-semibold text-slate-600 mb-1.5">Belediye ID (opsiyonel)</span>
+        <input id="userEditMuniId" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm font-mono"/>
+      </label>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" id="userModalCancel" class="px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-300">İptal</button>
+        <button type="submit" class="bg-primary text-white font-bold px-5 py-2.5 rounded-xl text-sm">Kaydet</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -238,56 +502,38 @@ const SUPABASE_URL = 'https://jxmorcxbzsdsrylrqsbz.supabase.co';
 const ADMIN_FN_URL = `${SUPABASE_URL}/functions/v1/admin-reports`;
 const PHOTO_FALLBACK = 'assets/logo.png';
 const PWD_KEY = 'copavcisi_admin_pwd';
-const REJECTED_PAGE_SIZE = 15;
+const PAGE_SIZE = 20;
+const MUNI_PAGE_SIZE = 25;
 
 const $ = (id) => document.getElementById(id);
+
 const loginView = $('loginView');
 const appView = $('appView');
 const logoutBtn = $('logoutBtn');
-const openRejectedModalBtn = $('openRejectedModalBtn');
-const openRejectedModalBtn2 = $('openRejectedModalBtn2');
+const refreshBtn = $('refreshBtn');
 const loginForm = $('loginForm');
 const loginError = $('loginError');
 const pwdInput = $('pwdInput');
 const loginBtn = $('loginBtn');
-const listState = $('listState');
-const emptyState = $('emptyState');
-const errorState = $('errorState');
-const reportsList = $('reportsList');
-const countBadge = $('countBadge');
-const refreshBtn = $('refreshBtn');
-const queueList = $('queueList');
-const queueCountBadge = $('queueCountBadge');
-const queueListState = $('queueListState');
-const queueEmptyState = $('queueEmptyState');
-const queueErrorState = $('queueErrorState');
-const rejectedStatCount = $('rejectedStatCount');
-const rejectedModal = $('rejectedModal');
-const closeRejectedModal = $('closeRejectedModal');
-const rejectedFilterId = $('rejectedFilterId');
-const rejectedFilterApply = $('rejectedFilterApply');
-const rejectedFilterClear = $('rejectedFilterClear');
-const rejectedList = $('rejectedList');
-const rejectedListState = $('rejectedListState');
-const rejectedEmptyState = $('rejectedEmptyState');
-const rejectedErrorState = $('rejectedErrorState');
-const rejPrev = $('rejPrev');
-const rejNext = $('rejNext');
-const rejPageLabel = $('rejPageLabel');
 
-let rejectedState = { page: 1, totalPages: 1, total: 0, filterId: '' };
+let currentTab = 'overview';
+let muniModalMode = 'edit';
+const reportsState = { page: 1, totalPages: 1, total: 0 };
+const muniState = { page: 1, totalPages: 1, total: 0 };
+const userState = { page: 1, totalPages: 1, total: 0 };
+const loadedTabs = new Set();
 
 function showView(name) {
   if (name === 'login') {
     loginView.classList.remove('hidden-important');
     appView.classList.add('hidden-important');
     logoutBtn.classList.add('hidden-important');
-    openRejectedModalBtn.classList.add('hidden-important');
+    refreshBtn.classList.add('hidden-important');
   } else {
     loginView.classList.add('hidden-important');
     appView.classList.remove('hidden-important');
     logoutBtn.classList.remove('hidden-important');
-    openRejectedModalBtn.classList.remove('hidden-important');
+    refreshBtn.classList.remove('hidden-important');
   }
 }
 
@@ -337,7 +583,7 @@ async function callAdmin(action, extra = {}) {
 }
 
 function formatDate(iso) {
-  if (!iso) return '';
+  if (!iso) return '—';
   try {
     return new Date(iso).toLocaleString('tr-TR', {
       day: '2-digit', month: '2-digit', year: 'numeric',
@@ -364,83 +610,212 @@ function escapeHtml(str) {
     .replaceAll("'", '&#39;');
 }
 
-function renderQueuedReports(reports) {
-  queueList.innerHTML = '';
-  queueCountBadge.textContent = String(reports.length);
+function pipelineInfo(r) {
+  if (r.approval_status === 'rejected') {
+    return { key: 'rejected', label: 'Reddedildi', cls: 'bg-red-100 text-red-800' };
+  }
+  if (r.approval_status === 'pending') {
+    return { key: 'pending', label: 'Bekliyor', cls: 'bg-emerald-100 text-emerald-900' };
+  }
+  if (r.approval_status === 'approved' && !r.notified_at) {
+    return { key: 'queued', label: 'Kuyrukta', cls: 'bg-amber-100 text-amber-900' };
+  }
+  if (r.email_notify_outcome === 'sent') {
+    return { key: 'delivered', label: 'İletildi', cls: 'bg-sky-100 text-sky-900' };
+  }
+  if (
+    r.status === 'not_delivered' ||
+    r.email_notify_outcome === 'skipped_no_recipient' ||
+    r.email_notify_outcome === 'skipped_opt_out'
+  ) {
+    return { key: 'not_delivered', label: 'İletilemedi', cls: 'bg-orange-100 text-orange-900' };
+  }
+  if (r.status === 'forwarded' || (r.approval_status === 'approved' && r.notified_at)) {
+    return { key: 'delivered', label: 'İletildi', cls: 'bg-sky-100 text-sky-900' };
+  }
+  return { key: 'other', label: r.status || r.approval_status || '—', cls: 'bg-slate-100 text-slate-700' };
+}
 
+function outcomeLabel(o) {
+  switch (o) {
+    case 'sent': return 'Gönderildi';
+    case 'skipped_no_recipient': return 'Alıcı yok';
+    case 'skipped_opt_out': return 'Opt-out';
+    default: return o || '—';
+  }
+}
+
+function setTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach((btn) => {
+    const selected = btn.dataset.tab === tab;
+    btn.setAttribute('aria-selected', selected ? 'true' : 'false');
+  });
+  ['overview', 'moderation', 'reports', 'municipalities', 'users'].forEach((id) => {
+    const el = $(`tab-${id}`);
+    if (!el) return;
+    if (id === tab) el.classList.remove('hidden-important');
+    else el.classList.add('hidden-important');
+  });
+  if (!loadedTabs.has(tab)) {
+    loadedTabs.add(tab);
+    loadTab(tab);
+  }
+}
+
+async function loadTab(tab) {
+  if (tab === 'overview') await loadOverview();
+  else if (tab === 'moderation') await Promise.all([loadReports(), loadQueued()]);
+  else if (tab === 'reports') await loadAllReports(1);
+  else if (tab === 'municipalities') await loadMunicipalities(1);
+  else if (tab === 'users') await loadUsers(1);
+}
+
+async function refreshCurrent() {
+  loadedTabs.delete(currentTab);
+  if (currentTab === 'overview' || currentTab === 'moderation') {
+    loadedTabs.delete('overview');
+    loadedTabs.delete('moderation');
+  }
+  await loadTab(currentTab);
+  if (currentTab !== 'overview') {
+    try {
+      const d = await callAdmin('stats');
+      applyStats(d.stats || {});
+    } catch { /* ignore */ }
+  }
+}
+
+function applyStats(s) {
+  const set = (id, v) => { const el = $(id); if (el) el.textContent = String(v ?? '—'); };
+  set('statTotal', s.total);
+  set('statPending', s.pending);
+  set('statQueued', s.queued);
+  set('statDelivered', s.delivered);
+  set('statNotDelivered', s.not_delivered);
+  set('statRejected', s.rejected);
+  set('statCreated7', s.created_7d);
+  set('statApproved7', s.approved_7d);
+  set('statDelivered7', s.delivered_7d);
+  set('statCreated30', s.created_30d);
+  set('statMuniTotal', s.municipalities_total);
+  set('statMuniOptOut', s.municipalities_opt_out);
+  set('statUsers', s.users_total);
+  set('countBadge', s.pending ?? 0);
+  set('queueCountBadge', s.queued ?? 0);
+}
+
+function compactReportCard(r, { clickable = true } = {}) {
+  const photoUrl = Array.isArray(r.photo_urls) && r.photo_urls[0] ? r.photo_urls[0] : PHOTO_FALLBACK;
+  const muni = r.municipalities || {};
+  const pipe = pipelineInfo(r);
+  const li = document.createElement('li');
+  li.className = 'bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm';
+  if (clickable) {
+    li.classList.add('cursor-pointer', 'hover:border-slate-300');
+    li.dataset.openReport = r.id;
+  }
+  li.innerHTML = `
+    <div class="grid grid-cols-[72px_1fr] gap-0">
+      <div class="bg-slate-100 h-full min-h-[4.5rem] overflow-hidden">
+        <img src="${escapeHtml(photoUrl)}" alt="" class="w-full h-full object-cover" loading="lazy"
+             onerror="this.src='${PHOTO_FALLBACK}'"/>
+      </div>
+      <div class="p-3">
+        <div class="flex flex-wrap gap-1.5 mb-1">
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${pipe.cls}">${escapeHtml(pipe.label)}</span>
+          <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">${escapeHtml(categoryLabel(r.category))}</span>
+        </div>
+        <p class="text-sm font-semibold">${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</p>
+        <p class="text-xs text-slate-600 line-clamp-1">${escapeHtml(r.address || '-')}</p>
+        <p class="text-[10px] text-slate-500 mt-1">${escapeHtml(muni.name || 'Belediye yok')} · ${escapeHtml(formatDate(r.notified_at || r.approved_at || r.created_at))}</p>
+      </div>
+    </div>`;
+  return li;
+}
+
+async function loadOverview() {
+  const err = $('overviewError');
+  const loading = $('overviewLoading');
+  err.classList.add('hidden');
+  loading.classList.remove('hidden');
+  try {
+    const d = await callAdmin('stats');
+    loading.classList.add('hidden');
+    applyStats(d.stats || {});
+    const delList = $('recentDeliveredList');
+    const penList = $('recentPendingList');
+    delList.innerHTML = '';
+    penList.innerHTML = '';
+    const delivered = d.recent_delivered || [];
+    const pending = d.recent_pending || [];
+    $('recentDeliveredEmpty').classList.toggle('hidden', delivered.length > 0);
+    $('recentPendingEmpty').classList.toggle('hidden', pending.length > 0);
+    delivered.forEach((r) => delList.appendChild(compactReportCard(r)));
+    pending.forEach((r) => penList.appendChild(compactReportCard(r)));
+  } catch (e) {
+    loading.classList.add('hidden');
+    err.textContent = `Özet yüklenemedi: ${e.message}`;
+    err.classList.remove('hidden');
+  }
+}
+
+function renderQueuedReports(reports) {
+  const queueList = $('queueList');
+  queueList.innerHTML = '';
+  $('queueCountBadge').textContent = String(reports.length);
   if (reports.length === 0) {
-    queueEmptyState.classList.remove('hidden');
+    $('queueEmptyState').classList.remove('hidden');
     return;
   }
-  queueEmptyState.classList.add('hidden');
-
+  $('queueEmptyState').classList.add('hidden');
   for (const r of reports) {
-    const photoUrl = Array.isArray(r.photo_urls) && r.photo_urls[0]
-      ? r.photo_urls[0] : PHOTO_FALLBACK;
+    const photoUrl = Array.isArray(r.photo_urls) && r.photo_urls[0] ? r.photo_urls[0] : PHOTO_FALLBACK;
     const muni = r.municipalities || {};
-    const muniLabel = muni.name
-      ? `${muni.name}${muni.email ? ` · ${muni.email}` : ''}`
-      : 'Belediye atanmamış';
-    const approvedLine = r.approved_at ? formatDate(r.approved_at) : '—';
-
+    const muniLabel = muni.name ? `${muni.name}${muni.email ? ` · ${muni.email}` : ''}` : 'Belediye atanmamış';
     const li = document.createElement('li');
     li.className = 'bg-amber-50/40 border border-amber-100 rounded-2xl overflow-hidden shadow-sm';
-    li.dataset.queuedId = r.id;
     li.innerHTML = `
       <div class="grid grid-cols-1 md:grid-cols-[120px_1fr] gap-0">
-        <a href="${escapeHtml(photoUrl)}" target="_blank" rel="noopener"
-           class="block bg-slate-100 md:h-full h-32 overflow-hidden">
-          <img src="${escapeHtml(photoUrl)}" alt=""
-               class="w-full h-full object-cover" loading="lazy"
-               onerror="this.src='${PHOTO_FALLBACK}'"/>
+        <a href="${escapeHtml(photoUrl)}" target="_blank" rel="noopener" class="block bg-slate-100 md:h-full h-32 overflow-hidden">
+          <img src="${escapeHtml(photoUrl)}" alt="" class="w-full h-full object-cover" loading="lazy" onerror="this.src='${PHOTO_FALLBACK}'"/>
         </a>
         <div class="p-4">
           <div class="flex flex-wrap items-center gap-2 mb-2">
             <span class="inline-block px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-bold uppercase tracking-wide">Kuyruk</span>
             <span class="inline-block px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">${escapeHtml(categoryLabel(r.category))}</span>
-            <span class="text-[10px] text-slate-500 font-mono select-all" title="Rapor ID">${escapeHtml(r.id)}</span>
+            <span class="text-[10px] text-slate-500 font-mono select-all">${escapeHtml(r.id)}</span>
           </div>
-          <p class="text-[11px] text-amber-900 font-semibold mb-2">Onay: ${escapeHtml(approvedLine)}</p>
-          <p class="text-sm font-semibold text-on-surface mb-0.5">
-            ${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}
-          </p>
+          <p class="text-[11px] text-amber-900 font-semibold mb-2">Onay: ${escapeHtml(formatDate(r.approved_at))}</p>
+          <p class="text-sm font-semibold mb-0.5">${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</p>
           <p class="text-xs text-slate-700 mb-1 line-clamp-2">${escapeHtml(r.address || '-')}</p>
           <p class="text-[11px] text-slate-500"><span class="font-semibold">Hedef:</span> ${escapeHtml(muniLabel)}</p>
         </div>
-      </div>
-    `;
+      </div>`;
     queueList.appendChild(li);
   }
 }
 
-function renderReports(reports) {
+function renderPendingReports(reports) {
+  const reportsList = $('reportsList');
   reportsList.innerHTML = '';
-  countBadge.textContent = String(reports.length);
-
+  $('countBadge').textContent = String(reports.length);
   if (reports.length === 0) {
-    emptyState.classList.remove('hidden');
+    $('emptyState').classList.remove('hidden');
     return;
   }
-  emptyState.classList.add('hidden');
-
+  $('emptyState').classList.add('hidden');
   for (const r of reports) {
-    const photoUrl = Array.isArray(r.photo_urls) && r.photo_urls[0]
-      ? r.photo_urls[0] : PHOTO_FALLBACK;
+    const photoUrl = Array.isArray(r.photo_urls) && r.photo_urls[0] ? r.photo_urls[0] : PHOTO_FALLBACK;
     const muni = r.municipalities || {};
-    const muniLabel = muni.name
-      ? `${muni.name}${muni.email ? ` · ${muni.email}` : ''}`
-      : 'Belediye atanmamış';
-
+    const muniLabel = muni.name ? `${muni.name}${muni.email ? ` · ${muni.email}` : ''}` : 'Belediye atanmamış';
     const li = document.createElement('li');
     li.className = 'bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:border-slate-300 transition-colors';
     li.dataset.reportId = r.id;
     li.innerHTML = `
       <div class="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-0">
-        <a href="${escapeHtml(photoUrl)}" target="_blank" rel="noopener"
-           class="block bg-slate-100 md:h-full h-44 overflow-hidden">
-          <img src="${escapeHtml(photoUrl)}" alt=""
-               class="w-full h-full object-cover" loading="lazy"
-               onerror="this.src='${PHOTO_FALLBACK}'"/>
+        <a href="${escapeHtml(photoUrl)}" target="_blank" rel="noopener" class="block bg-slate-100 md:h-full h-44 overflow-hidden">
+          <img src="${escapeHtml(photoUrl)}" alt="" class="w-full h-full object-cover" loading="lazy" onerror="this.src='${PHOTO_FALLBACK}'"/>
         </a>
         <div class="p-4 sm:p-5">
           <div class="flex flex-wrap items-center gap-2 mb-2">
@@ -448,168 +823,56 @@ function renderReports(reports) {
             <span class="text-[10px] text-slate-500">${escapeHtml(formatDate(r.created_at))}</span>
             <span class="text-[10px] text-slate-400 font-mono select-all break-all">${escapeHtml(r.id)}</span>
           </div>
-          <p class="text-sm font-semibold text-on-surface mb-0.5">
-            ${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}
-          </p>
+          <p class="text-sm font-semibold mb-0.5">${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</p>
           <p class="text-xs text-slate-700 mb-1.5 line-clamp-2">${escapeHtml(r.address || '-')}</p>
-          <p class="text-xs text-slate-600 italic mb-3 line-clamp-3">
+          <p class="text-xs text-slate-600 italic mb-3 line-clamp-3 min-h-[2.5rem]">
             ${r.description ? `"${escapeHtml(r.description)}"` : '<span class="text-slate-400">Açıklama yok</span>'}
           </p>
-          <p class="text-[11px] text-slate-500 mb-3">
-            <span class="font-semibold">Hedef:</span> ${escapeHtml(muniLabel)}
-          </p>
+          <p class="text-[11px] text-slate-500 mb-3"><span class="font-semibold">Hedef:</span> ${escapeHtml(muniLabel)}</p>
           <div class="flex flex-wrap gap-2">
-            <button data-action="approve" type="button"
-                    class="inline-flex items-center gap-2 bg-primary text-white font-bold px-4 py-2 rounded-full text-sm hover:bg-primary-container transition-colors disabled:opacity-50">
-              <span class="material-symbols-outlined text-base">check_circle</span>
-              Onayla
+            <button data-action="approve" type="button" class="inline-flex items-center gap-2 bg-primary text-white font-bold px-4 py-2 rounded-full text-sm hover:bg-primary-container disabled:opacity-50">
+              <span class="material-symbols-outlined text-base">check_circle</span> Onayla
             </button>
-            <button data-action="reject" type="button"
-                    class="inline-flex items-center gap-2 bg-white border border-red-300 text-red-700 font-bold px-4 py-2 rounded-full text-sm hover:bg-red-50 transition-colors disabled:opacity-50">
-              <span class="material-symbols-outlined text-base">cancel</span>
-              Reddet
+            <button data-action="reject" type="button" class="inline-flex items-center gap-2 bg-white border border-red-300 text-red-700 font-bold px-4 py-2 rounded-full text-sm hover:bg-red-50 disabled:opacity-50">
+              <span class="material-symbols-outlined text-base">cancel</span> Reddet
             </button>
           </div>
         </div>
-      </div>
-    `;
+      </div>`;
     reportsList.appendChild(li);
   }
 }
 
 async function loadReports() {
-  errorState.classList.add('hidden');
-  emptyState.classList.add('hidden');
-  listState.classList.remove('hidden');
-  reportsList.innerHTML = '';
+  $('errorState').classList.add('hidden');
+  $('emptyState').classList.add('hidden');
+  $('listState').classList.remove('hidden');
+  $('reportsList').innerHTML = '';
   try {
     const data = await callAdmin('list');
-    listState.classList.add('hidden');
-    renderReports(data.reports || []);
+    $('listState').classList.add('hidden');
+    renderPendingReports(data.reports || []);
   } catch (err) {
-    listState.classList.add('hidden');
-    errorState.textContent = `Bekleyen liste yüklenemedi: ${err.message}`;
-    errorState.classList.remove('hidden');
+    $('listState').classList.add('hidden');
+    $('errorState').textContent = `Bekleyen liste yüklenemedi: ${err.message}`;
+    $('errorState').classList.remove('hidden');
   }
 }
 
 async function loadQueued() {
-  queueErrorState.classList.add('hidden');
-  queueEmptyState.classList.add('hidden');
-  queueListState.classList.remove('hidden');
-  queueList.innerHTML = '';
+  $('queueErrorState').classList.add('hidden');
+  $('queueEmptyState').classList.add('hidden');
+  $('queueListState').classList.remove('hidden');
+  $('queueList').innerHTML = '';
   try {
     const data = await callAdmin('list_queued');
-    queueListState.classList.add('hidden');
+    $('queueListState').classList.add('hidden');
     renderQueuedReports(data.queued_reports || []);
   } catch (err) {
-    queueListState.classList.add('hidden');
-    queueErrorState.textContent = `Kuyruk yüklenemedi: ${err.message}`;
-    queueErrorState.classList.remove('hidden');
+    $('queueListState').classList.add('hidden');
+    $('queueErrorState').textContent = `Kuyruk yüklenemedi: ${err.message}`;
+    $('queueErrorState').classList.remove('hidden');
   }
-}
-
-async function loadRejectedStat() {
-  try {
-    const d = await callAdmin('list_rejected', { page: 1, page_size: 1 });
-    rejectedStatCount.textContent = String(d.total ?? 0);
-  } catch {
-    rejectedStatCount.textContent = '—';
-  }
-}
-
-async function refreshAll() {
-  await Promise.all([loadReports(), loadQueued(), loadRejectedStat()]);
-}
-
-function rejectedModalOpen(open) {
-  if (open) {
-    rejectedModal.classList.remove('hidden');
-    rejectedModal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-  } else {
-    rejectedModal.classList.add('hidden');
-    rejectedModal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  }
-}
-
-function renderRejectedReports(reports) {
-  rejectedList.innerHTML = '';
-  for (const r of reports) {
-    const photoUrl = Array.isArray(r.photo_urls) && r.photo_urls[0]
-      ? r.photo_urls[0] : PHOTO_FALLBACK;
-    const muni = r.municipalities || {};
-    const muniLabel = muni.name ? escapeHtml(muni.name) : '—';
-
-    const li = document.createElement('li');
-    li.className = 'rounded-xl border border-slate-200 bg-slate-50/80 overflow-hidden';
-    li.innerHTML = `
-      <div class="grid grid-cols-1 sm:grid-cols-[96px_1fr] gap-0">
-        <a href="${escapeHtml(photoUrl)}" target="_blank" rel="noopener" class="block bg-slate-200 sm:h-full h-24 overflow-hidden">
-          <img src="${escapeHtml(photoUrl)}" alt="" class="w-full h-full object-cover" loading="lazy"
-               onerror="this.src='${PHOTO_FALLBACK}'"/>
-        </a>
-        <div class="p-3">
-          <p class="text-[10px] font-mono text-slate-500 break-all select-all mb-2">${escapeHtml(r.id)}</p>
-          <div class="flex flex-wrap gap-1.5 mb-2">
-            <span class="px-2 py-0.5 rounded-full bg-red-100 text-red-800 text-[10px] font-bold uppercase">Reddedildi</span>
-            <span class="px-2 py-0.5 rounded-full bg-slate-200 text-slate-800 text-[10px] font-bold">${escapeHtml(categoryLabel(r.category))}</span>
-          </div>
-          <p class="text-xs text-slate-600">${escapeHtml(formatDate(r.updated_at || r.created_at))}</p>
-          <p class="text-sm font-semibold text-on-surface mt-1">${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</p>
-          <p class="text-xs text-slate-700 line-clamp-2">${escapeHtml(r.address || '-')}</p>
-          <p class="text-xs text-slate-600 italic line-clamp-2 mt-1">${r.description ? escapeHtml(r.description) : ''}</p>
-          <p class="text-[10px] text-slate-500 mt-1"><span class="font-semibold">Belediye:</span> ${muniLabel}</p>
-        </div>
-      </div>
-    `;
-    rejectedList.appendChild(li);
-  }
-}
-
-async function loadRejectedPage(page) {
-  rejectedErrorState.classList.add('hidden');
-  rejectedEmptyState.classList.add('hidden');
-  rejectedListState.classList.remove('hidden');
-  rejectedList.innerHTML = '';
-
-  const payload = { page, page_size: REJECTED_PAGE_SIZE };
-  if (rejectedState.filterId) payload.report_id = rejectedState.filterId;
-
-  try {
-    const d = await callAdmin('list_rejected', payload);
-    rejectedState.page = d.page ?? page;
-    rejectedState.totalPages = d.total_pages ?? 1;
-    rejectedState.total = d.total ?? 0;
-
-    rejectedListState.classList.add('hidden');
-    const reps = d.rejected_reports || [];
-    if (reps.length === 0) rejectedEmptyState.classList.remove('hidden');
-    renderRejectedReports(reps);
-
-    rejPageLabel.textContent =
-      `Sayfa ${rejectedState.page} / ${rejectedState.totalPages} · Toplam ${rejectedState.total} kayıt`;
-
-    rejPrev.disabled = rejectedState.page <= 1;
-    rejNext.disabled = rejectedState.page >= rejectedState.totalPages;
-  } catch (err) {
-    rejectedListState.classList.add('hidden');
-    rejectedErrorState.textContent = err.message || String(err);
-    rejectedErrorState.classList.remove('hidden');
-    rejPrev.disabled = true;
-    rejNext.disabled = true;
-  }
-}
-
-async function openRejectedModal() {
-  rejectedState.filterId = rejectedFilterId.value.trim();
-  rejectedModalOpen(true);
-  await loadRejectedPage(1);
-}
-
-function closeRejectedModalFn() {
-  rejectedModalOpen(false);
 }
 
 async function handleAction(reportId, action, card) {
@@ -619,17 +882,12 @@ async function handleAction(reportId, action, card) {
     const data = await callAdmin(action, { report_id: reportId });
     if (action === 'approve') {
       const queued = data.email_queued_for_digest === true;
-      const sentNow = data.email_sent === true;
-      if (sentNow || queued) {
-        toast(
-          sentNow ? 'Onaylandı ve belediyeye e-posta gönderildi.'
-            : 'Onaylandı. Günlük özet kuyruğunda; planlanan saatte iletilecek.',
-          'success',
-        );
-      } else {
-        const reason = data.reason ? ` (${data.reason})` : '';
-        toast(`Onay kaydedildi; kuyruk notu:${reason}`, 'error');
-      }
+      toast(
+        queued
+          ? 'Onaylandı. Günlük özet kuyruğunda; planlanan saatte iletilecek.'
+          : `Onay kaydedildi${data.reason ? ` (${data.reason})` : ''}`,
+        queued ? 'success' : 'error',
+      );
     } else {
       toast('Rapor reddedildi.', 'info');
     }
@@ -638,11 +896,12 @@ async function handleAction(reportId, action, card) {
     card.style.transform = 'scale(0.97)';
     setTimeout(() => {
       card.remove();
-      const remaining = reportsList.children.length;
-      countBadge.textContent = String(remaining);
-      if (remaining === 0) emptyState.classList.remove('hidden');
+      const remaining = $('reportsList').children.length;
+      $('countBadge').textContent = String(remaining);
+      if (remaining === 0) $('emptyState').classList.remove('hidden');
       if (action === 'approve') loadQueued();
-      if (action === 'reject') loadRejectedStat();
+      loadedTabs.delete('overview');
+      loadedTabs.delete('reports');
     }, 280);
   } catch (err) {
     toast(`Hata: ${err.message}`, 'error');
@@ -650,9 +909,301 @@ async function handleAction(reportId, action, card) {
   }
 }
 
+function reportsFilterPayload(page) {
+  const payload = { page, page_size: PAGE_SIZE, pipeline: $('repPipeline').value || 'all' };
+  const city = $('repCity').value.trim();
+  const q = $('repQ').value.trim();
+  const id = $('repId').value.trim();
+  if (city) payload.city = city;
+  if (q) payload.q = q;
+  if (id) payload.report_id = id;
+  return payload;
+}
+
+async function loadAllReports(page) {
+  $('repErrorState').classList.add('hidden');
+  $('repEmptyState').classList.add('hidden');
+  $('repListState').classList.remove('hidden');
+  $('allReportsList').innerHTML = '';
+  try {
+    const d = await callAdmin('list_reports', reportsFilterPayload(page));
+    $('repListState').classList.add('hidden');
+    reportsState.page = d.page ?? page;
+    reportsState.totalPages = d.total_pages ?? 1;
+    reportsState.total = d.total ?? 0;
+    $('repPageLabel').textContent =
+      `Sayfa ${reportsState.page} / ${reportsState.totalPages} · ${reportsState.total} kayıt`;
+    $('repPrev').disabled = reportsState.page <= 1;
+    $('repNext').disabled = reportsState.page >= reportsState.totalPages;
+    const list = d.reports || [];
+    if (!list.length) $('repEmptyState').classList.remove('hidden');
+    list.forEach((r) => {
+      const photoUrl = Array.isArray(r.photo_urls) && r.photo_urls[0] ? r.photo_urls[0] : PHOTO_FALLBACK;
+      const muni = r.municipalities || {};
+      const pipe = pipelineInfo(r);
+      const li = document.createElement('li');
+      li.className = 'bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm cursor-pointer hover:border-slate-300';
+      li.dataset.openReport = r.id;
+      li.innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-[96px_1fr] gap-0">
+          <div class="bg-slate-100 sm:h-full h-28 overflow-hidden">
+            <img src="${escapeHtml(photoUrl)}" alt="" class="w-full h-full object-cover" loading="lazy" onerror="this.src='${PHOTO_FALLBACK}'"/>
+          </div>
+          <div class="p-4">
+            <div class="flex flex-wrap gap-1.5 mb-2">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${pipe.cls}">${escapeHtml(pipe.label)}</span>
+              <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">${escapeHtml(categoryLabel(r.category))}</span>
+              <span class="text-[10px] text-slate-500">${escapeHtml(formatDate(r.created_at))}</span>
+            </div>
+            <p class="text-sm font-semibold">${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</p>
+            <p class="text-xs text-slate-700 line-clamp-2">${escapeHtml(r.address || '-')}</p>
+            <p class="text-[11px] text-slate-500 mt-2">
+              <span class="font-semibold">Belediye:</span> ${escapeHtml(muni.name || '—')}
+              · <span class="font-semibold">İletim:</span> ${escapeHtml(outcomeLabel(r.email_notify_outcome))}
+              · <span class="font-semibold">notified:</span> ${escapeHtml(formatDate(r.notified_at))}
+            </p>
+            <p class="text-[10px] font-mono text-slate-400 mt-1 break-all select-all">${escapeHtml(r.id)}</p>
+          </div>
+        </div>`;
+      $('allReportsList').appendChild(li);
+    });
+  } catch (err) {
+    $('repListState').classList.add('hidden');
+    $('repErrorState').textContent = err.message;
+    $('repErrorState').classList.remove('hidden');
+    $('repPrev').disabled = true;
+    $('repNext').disabled = true;
+  }
+}
+
+async function openReportDrawer(id) {
+  const drawer = $('reportDrawer');
+  $('drawerReportId').textContent = id;
+  $('drawerBody').innerHTML = '<div class="text-center py-10"><span class="spinner"></span></div>';
+  drawer.classList.remove('hidden');
+  drawer.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  try {
+    const d = await callAdmin('get_report', { report_id: id });
+    const r = d.report;
+    const muni = r.municipalities || {};
+    const pipe = pipelineInfo(r);
+    const photoUrl = Array.isArray(r.photo_urls) && r.photo_urls[0] ? r.photo_urls[0] : PHOTO_FALLBACK;
+    $('drawerBody').innerHTML = `
+      <img src="${escapeHtml(photoUrl)}" alt="" class="w-full h-48 object-cover rounded-xl mb-4" onerror="this.src='${PHOTO_FALLBACK}'"/>
+      <div class="flex flex-wrap gap-1.5 mb-3">
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${pipe.cls}">${escapeHtml(pipe.label)}</span>
+        <span class="px-2 py-0.5 rounded-full bg-slate-100 text-[10px] font-bold">${escapeHtml(categoryLabel(r.category))}</span>
+      </div>
+      <dl class="space-y-2 text-xs">
+        <div><dt class="font-semibold text-slate-500">Konum</dt><dd>${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Adres</dt><dd>${escapeHtml(r.address || '-')}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Açıklama</dt><dd class="min-h-[1.25rem]">${escapeHtml(r.description || '—')}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Belediye</dt><dd>${escapeHtml(muni.name || '—')}${muni.email ? ` · ${escapeHtml(muni.email)}` : ''}</dd></div>
+        <div><dt class="font-semibold text-slate-500">approval_status / status</dt><dd class="font-mono">${escapeHtml(r.approval_status)} / ${escapeHtml(r.status || '—')}</dd></div>
+        <div><dt class="font-semibold text-slate-500">email_notify_outcome</dt><dd>${escapeHtml(outcomeLabel(r.email_notify_outcome))}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Oluşturma</dt><dd>${escapeHtml(formatDate(r.created_at))}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Onay</dt><dd>${escapeHtml(formatDate(r.approved_at))}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Bildirim (notified_at)</dt><dd>${escapeHtml(formatDate(r.notified_at))}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Koordinat</dt><dd class="font-mono">${escapeHtml(r.latitude)}, ${escapeHtml(r.longitude)}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Kullanıcı</dt><dd class="font-mono break-all">${escapeHtml(r.user_id)}</dd></div>
+      </dl>`;
+  } catch (e) {
+    $('drawerBody').innerHTML = `<p class="text-red-700">${escapeHtml(e.message)}</p>`;
+  }
+}
+
+function closeReportDrawer() {
+  const drawer = $('reportDrawer');
+  drawer.classList.add('hidden');
+  drawer.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function muniFilterPayload(page) {
+  const payload = { page, page_size: MUNI_PAGE_SIZE };
+  const q = $('muniQ').value.trim();
+  if (q) payload.q = q;
+  const notify = $('muniNotify').value;
+  if (notify === 'true') payload.email_notifications_enabled = true;
+  if (notify === 'false') payload.email_notifications_enabled = false;
+  const active = $('muniActive').value;
+  if (active === 'true') payload.is_active = true;
+  if (active === 'false') payload.is_active = false;
+  if ($('muniMissingEmail').checked) payload.missing_email = true;
+  return payload;
+}
+
+async function loadMunicipalities(page) {
+  $('muniErrorState').classList.add('hidden');
+  $('muniEmptyState').classList.add('hidden');
+  $('muniListState').classList.remove('hidden');
+  $('muniList').innerHTML = '';
+  try {
+    const d = await callAdmin('list_municipalities', muniFilterPayload(page));
+    $('muniListState').classList.add('hidden');
+    muniState.page = d.page ?? page;
+    muniState.totalPages = d.total_pages ?? 1;
+    muniState.total = d.total ?? 0;
+    $('muniPageLabel').textContent =
+      `Sayfa ${muniState.page} / ${muniState.totalPages} · ${muniState.total} kayıt`;
+    $('muniPrev').disabled = muniState.page <= 1;
+    $('muniNext').disabled = muniState.page >= muniState.totalPages;
+    const list = d.municipalities || [];
+    if (!list.length) $('muniEmptyState').classList.remove('hidden');
+    list.forEach((m) => {
+      const li = document.createElement('li');
+      li.className = 'bg-white border border-slate-200 rounded-2xl p-4 shadow-sm';
+      const notifyOn = m.email_notifications_enabled !== false;
+      const active = m.is_active !== false;
+      li.innerHTML = `
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="font-bold text-sm">${escapeHtml(m.name)}</p>
+            <p class="text-xs text-slate-600">${escapeHtml(m.district)}, ${escapeHtml(m.city)}</p>
+            <p class="text-xs text-slate-500 mt-1">${escapeHtml(m.email || 'E-posta yok')}${m.whatsapp_number ? ` · ${escapeHtml(m.whatsapp_number)}` : ''}</p>
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${notifyOn ? 'bg-emerald-100 text-emerald-900' : 'bg-orange-100 text-orange-900'}">${notifyOn ? 'Bildirim açık' : 'Opt-out'}</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${active ? 'bg-slate-100 text-slate-700' : 'bg-red-100 text-red-800'}">${active ? 'Aktif' : 'Pasif'}</span>
+            </div>
+          </div>
+          <button type="button" data-edit-muni='${escapeHtml(JSON.stringify(m))}' class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold px-3 py-2 rounded-xl text-xs">Düzenle</button>
+        </div>`;
+      $('muniList').appendChild(li);
+    });
+  } catch (err) {
+    $('muniListState').classList.add('hidden');
+    $('muniErrorState').textContent = err.message;
+    $('muniErrorState').classList.remove('hidden');
+  }
+}
+
+function openMuniModal(mode, m = null) {
+  muniModalMode = mode;
+  const modal = $('muniModal');
+  $('muniEditId').value = m?.id || '';
+  $('muniModalTitle').textContent = mode === 'create' ? 'Yeni belediye' : (m?.name || 'Belediye');
+  $('muniModalSub').textContent = mode === 'create' ? 'Temel bilgiler' : 'E-posta ve bildirim ayarları';
+  $('muniCreateFields').classList.toggle('hidden', mode !== 'create');
+  $('muniEditFlags').classList.toggle('hidden', mode === 'create');
+  $('districtEmailsSection').classList.toggle('hidden', mode === 'create');
+  $('muniName').value = m?.name || '';
+  $('muniCity').value = m?.city || '';
+  $('muniDistrict').value = m?.district || '';
+  $('muniEmail').value = m?.email || '';
+  $('muniWhatsapp').value = m?.whatsapp_number || '';
+  $('muniEmailEnabled').checked = m ? m.email_notifications_enabled !== false : true;
+  $('muniIsActive').checked = m ? m.is_active !== false : true;
+  $('districtEmailList').innerHTML = '';
+  $('distKey').value = '';
+  $('distEmail').value = '';
+  $('distKep').value = '';
+  modal.classList.remove('hidden');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  if (mode === 'edit' && m?.id) loadDistrictEmails(m.id);
+}
+
+function closeMuniModal() {
+  const modal = $('muniModal');
+  modal.classList.add('hidden');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+async function loadDistrictEmails(municipalityId) {
+  $('districtEmailList').innerHTML = '<li class="text-slate-500">Yükleniyor…</li>';
+  try {
+    const d = await callAdmin('list_district_emails', { municipality_id: municipalityId });
+    const rows = d.district_emails || [];
+    if (!rows.length) {
+      $('districtEmailList').innerHTML = '<li class="text-slate-500">İlçe e-postası yok.</li>';
+      return;
+    }
+    $('districtEmailList').innerHTML = rows.map((row) => `
+      <li class="rounded-lg border border-slate-200 px-3 py-2 flex flex-wrap gap-2 justify-between">
+        <span class="font-semibold">${escapeHtml(row.district_key)}</span>
+        <span>${escapeHtml(row.email || '—')}${row.kep_email ? ` · KEP: ${escapeHtml(row.kep_email)}` : ''}</span>
+      </li>`).join('');
+  } catch (e) {
+    $('districtEmailList').innerHTML = `<li class="text-red-600">${escapeHtml(e.message)}</li>`;
+  }
+}
+
+async function loadUsers(page) {
+  $('userErrorState').classList.add('hidden');
+  $('userEmptyState').classList.add('hidden');
+  $('userListState').classList.remove('hidden');
+  $('userList').innerHTML = '';
+  const payload = { page, page_size: MUNI_PAGE_SIZE };
+  const q = $('userQ').value.trim();
+  const role = $('userRole').value.trim();
+  const userType = $('userType').value.trim();
+  if (q) payload.q = q;
+  if (role) payload.role = role;
+  if (userType) payload.user_type = userType;
+  try {
+    const d = await callAdmin('list_users', payload);
+    $('userListState').classList.add('hidden');
+    userState.page = d.page ?? page;
+    userState.totalPages = d.total_pages ?? 1;
+    userState.total = d.total ?? 0;
+    $('userPageLabel').textContent =
+      `Sayfa ${userState.page} / ${userState.totalPages} · ${userState.total} kayıt`;
+    $('userPrev').disabled = userState.page <= 1;
+    $('userNext').disabled = userState.page >= userState.totalPages;
+    const list = d.users || [];
+    if (!list.length) $('userEmptyState').classList.remove('hidden');
+    list.forEach((u) => {
+      const muniName = u.municipalities?.name || '—';
+      const li = document.createElement('li');
+      li.className = 'bg-white border border-slate-200 rounded-2xl p-4 shadow-sm';
+      li.innerHTML = `
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p class="font-bold text-sm">${escapeHtml(u.username)}${u.full_name ? ` · ${escapeHtml(u.full_name)}` : ''}</p>
+            <p class="text-xs text-slate-600 mt-1">${escapeHtml(u.role)} · ${escapeHtml(u.user_type)} · ${escapeHtml(u.city || '-')} / ${escapeHtml(u.district || '-')}</p>
+            <p class="text-xs text-slate-500 mt-1">Puan ${escapeHtml(u.total_points)} · Seviye ${escapeHtml(u.level)} · Belediye: ${escapeHtml(muniName)}</p>
+            <p class="text-[10px] font-mono text-slate-400 mt-1 break-all">${escapeHtml(u.id)}</p>
+          </div>
+          <button type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold px-3 py-2 rounded-xl text-xs"
+                  data-edit-user='${escapeHtml(JSON.stringify({ id: u.id, role: u.role, user_type: u.user_type, municipality_id: u.municipality_id || '' }))}'>
+            Düzenle
+          </button>
+        </div>`;
+      $('userList').appendChild(li);
+    });
+  } catch (err) {
+    $('userListState').classList.add('hidden');
+    $('userErrorState').textContent = err.message;
+    $('userErrorState').classList.remove('hidden');
+  }
+}
+
+function openUserModal(u) {
+  $('userEditId').value = u.id;
+  $('userEditIdLabel').textContent = u.id;
+  $('userEditRole').value = u.role || '';
+  $('userEditType').value = u.user_type || '';
+  $('userEditMuniId').value = u.municipality_id || '';
+  $('userModal').classList.remove('hidden');
+  $('userModal').setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeUserModal() {
+  $('userModal').classList.add('hidden');
+  $('userModal').setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('.tab-btn').forEach((btn) => {
+  btn.addEventListener('click', () => setTab(btn.dataset.tab));
+});
+
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  loginError.classList.add('hidden');
+  loginError.textContent = '';
   const pwd = pwdInput.value.trim();
   if (!pwd) return;
   loginBtn.disabled = true;
@@ -662,11 +1213,11 @@ loginForm.addEventListener('submit', async (e) => {
     await callAdmin('ping');
     pwdInput.value = '';
     showView('app');
-    await refreshAll();
+    loadedTabs.clear();
+    setTab('overview');
   } catch (err) {
     sessionStorage.removeItem(PWD_KEY);
     loginError.textContent = err.message || 'Giriş başarısız.';
-    loginError.classList.remove('hidden');
   } finally {
     loginBtn.disabled = false;
     loginBtn.textContent = 'Giriş yap';
@@ -675,42 +1226,13 @@ loginForm.addEventListener('submit', async (e) => {
 
 logoutBtn.addEventListener('click', () => {
   sessionStorage.removeItem(PWD_KEY);
+  loadedTabs.clear();
   showView('login');
 });
 
-refreshBtn.addEventListener('click', () => refreshAll());
+refreshBtn.addEventListener('click', () => refreshCurrent());
 
-openRejectedModalBtn.addEventListener('click', () => openRejectedModal());
-openRejectedModalBtn2.addEventListener('click', () => openRejectedModal());
-
-closeRejectedModal.addEventListener('click', closeRejectedModalFn);
-rejectedModal.addEventListener('click', (e) => {
-  if (e.target === rejectedModal) closeRejectedModalFn();
-});
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && !rejectedModal.classList.contains('hidden')) closeRejectedModalFn();
-});
-
-rejectedFilterApply.addEventListener('click', async () => {
-  rejectedState.filterId = rejectedFilterId.value.trim();
-  await loadRejectedPage(1);
-});
-rejectedFilterClear.addEventListener('click', async () => {
-  rejectedFilterId.value = '';
-  rejectedState.filterId = '';
-  await loadRejectedPage(1);
-});
-
-rejPrev.addEventListener('click', async () => {
-  if (rejectedState.page <= 1) return;
-  await loadRejectedPage(rejectedState.page - 1);
-});
-rejNext.addEventListener('click', async () => {
-  if (rejectedState.page >= rejectedState.totalPages) return;
-  await loadRejectedPage(rejectedState.page + 1);
-});
-
-reportsList.addEventListener('click', (e) => {
+$('reportsList').addEventListener('click', (e) => {
   const btn = e.target.closest('button[data-action]');
   if (!btn) return;
   const card = btn.closest('li[data-report-id]');
@@ -722,6 +1244,178 @@ reportsList.addEventListener('click', (e) => {
   handleAction(reportId, action, card);
 });
 
+document.addEventListener('click', (e) => {
+  const openRep = e.target.closest('[data-open-report]');
+  if (openRep) {
+    openReportDrawer(openRep.dataset.openReport);
+    return;
+  }
+  if (e.target.closest('[data-close-drawer]')) {
+    closeReportDrawer();
+    return;
+  }
+  const editMuni = e.target.closest('[data-edit-muni]');
+  if (editMuni) {
+    try {
+      openMuniModal('edit', JSON.parse(editMuni.getAttribute('data-edit-muni')));
+    } catch (err) {
+      toast('Belediye verisi okunamadı', 'error');
+    }
+    return;
+  }
+  const editUser = e.target.closest('[data-edit-user]');
+  if (editUser) {
+    try {
+      openUserModal(JSON.parse(editUser.getAttribute('data-edit-user')));
+    } catch {
+      toast('Kullanıcı verisi okunamadı', 'error');
+    }
+  }
+});
+
+$('repApply').addEventListener('click', () => loadAllReports(1));
+$('repClear').addEventListener('click', () => {
+  $('repPipeline').value = 'all';
+  $('repCity').value = '';
+  $('repQ').value = '';
+  $('repId').value = '';
+  loadAllReports(1);
+});
+$('repPrev').addEventListener('click', () => {
+  if (reportsState.page <= 1) return;
+  loadAllReports(reportsState.page - 1);
+});
+$('repNext').addEventListener('click', () => {
+  if (reportsState.page >= reportsState.totalPages) return;
+  loadAllReports(reportsState.page + 1);
+});
+
+$('muniApply').addEventListener('click', () => loadMunicipalities(1));
+$('muniClear').addEventListener('click', () => {
+  $('muniQ').value = '';
+  $('muniNotify').value = '';
+  $('muniActive').value = '';
+  $('muniMissingEmail').checked = false;
+  loadMunicipalities(1);
+});
+$('muniPrev').addEventListener('click', () => {
+  if (muniState.page <= 1) return;
+  loadMunicipalities(muniState.page - 1);
+});
+$('muniNext').addEventListener('click', () => {
+  if (muniState.page >= muniState.totalPages) return;
+  loadMunicipalities(muniState.page + 1);
+});
+$('muniCreateOpen').addEventListener('click', () => openMuniModal('create'));
+$('muniModalClose').addEventListener('click', closeMuniModal);
+$('muniModalCancel').addEventListener('click', closeMuniModal);
+$('muniModal').addEventListener('click', (e) => {
+  if (e.target === $('muniModal')) closeMuniModal();
+});
+
+$('muniForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('muniSaveBtn');
+  btn.disabled = true;
+  try {
+    if (muniModalMode === 'create') {
+      await callAdmin('create_municipality', {
+        name: $('muniName').value.trim(),
+        city: $('muniCity').value.trim(),
+        district: $('muniDistrict').value.trim(),
+        email: $('muniEmail').value.trim() || null,
+        whatsapp_number: $('muniWhatsapp').value.trim() || null,
+      });
+      toast('Belediye oluşturuldu', 'success');
+    } else {
+      await callAdmin('update_municipality', {
+        municipality_id: $('muniEditId').value,
+        email: $('muniEmail').value.trim(),
+        whatsapp_number: $('muniWhatsapp').value.trim(),
+        email_notifications_enabled: $('muniEmailEnabled').checked,
+        is_active: $('muniIsActive').checked,
+      });
+      toast('Belediye güncellendi', 'success');
+    }
+    closeMuniModal();
+    loadedTabs.delete('overview');
+    await loadMunicipalities(muniState.page || 1);
+  } catch (err) {
+    toast(err.message, 'error');
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+$('distUpsertBtn').addEventListener('click', async () => {
+  const municipalityId = $('muniEditId').value;
+  const district_key = $('distKey').value.trim();
+  if (!municipalityId || !district_key) {
+    toast('İlçe anahtarı gerekli', 'error');
+    return;
+  }
+  try {
+    await callAdmin('upsert_district_email', {
+      municipality_id: municipalityId,
+      district_key,
+      email: $('distEmail').value.trim() || null,
+      kep_email: $('distKep').value.trim() || null,
+    });
+    toast('İlçe e-postası kaydedildi', 'success');
+    $('distKey').value = '';
+    $('distEmail').value = '';
+    $('distKep').value = '';
+    await loadDistrictEmails(municipalityId);
+  } catch (err) {
+    toast(err.message, 'error');
+  }
+});
+
+$('userApply').addEventListener('click', () => loadUsers(1));
+$('userClear').addEventListener('click', () => {
+  $('userQ').value = '';
+  $('userRole').value = '';
+  $('userType').value = '';
+  loadUsers(1);
+});
+$('userPrev').addEventListener('click', () => {
+  if (userState.page <= 1) return;
+  loadUsers(userState.page - 1);
+});
+$('userNext').addEventListener('click', () => {
+  if (userState.page >= userState.totalPages) return;
+  loadUsers(userState.page + 1);
+});
+$('userModalClose').addEventListener('click', closeUserModal);
+$('userModalCancel').addEventListener('click', closeUserModal);
+$('userModal').addEventListener('click', (e) => {
+  if (e.target === $('userModal')) closeUserModal();
+});
+
+$('userForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  try {
+    await callAdmin('update_user', {
+      user_id: $('userEditId').value,
+      role: $('userEditRole').value.trim(),
+      user_type: $('userEditType').value.trim(),
+      municipality_id_for_user: $('userEditMuniId').value.trim() || null,
+    });
+    toast('Kullanıcı güncellendi', 'success');
+    closeUserModal();
+    await loadUsers(userState.page || 1);
+  } catch (err) {
+    toast(err.message, 'error');
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  if (!$('reportDrawer').classList.contains('hidden')) closeReportDrawer();
+  else if (!$('muniModal').classList.contains('hidden')) closeMuniModal();
+  else if (!$('userModal').classList.contains('hidden')) closeUserModal();
+});
+
 (async function init() {
   const stored = sessionStorage.getItem(PWD_KEY);
   if (!stored) {
@@ -731,7 +1425,7 @@ reportsList.addEventListener('click', (e) => {
   try {
     await callAdmin('ping');
     showView('app');
-    await refreshAll();
+    setTab('overview');
   } catch {
     showView('login');
   }
