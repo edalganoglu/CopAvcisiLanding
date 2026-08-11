@@ -16,61 +16,63 @@
   .hidden-important { display: none !important; }
   .toast { animation: toastIn 0.2s ease-out; }
   @keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  .spinner { border: 2px solid rgba(0,0,0,0.1); border-top-color: #006438; border-radius: 50%; width: 18px; height: 18px; animation: spin 0.8s linear infinite; display: inline-block; vertical-align: middle; }
+  .spinner { border: 2px solid rgba(0,0,0,0.08); border-top-color: #006438; border-radius: 50%; width: 16px; height: 16px; animation: spin 0.8s linear infinite; display: inline-block; vertical-align: middle; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .modal-enter { animation: modalIn 0.2s ease-out; }
-  @keyframes modalIn { from { opacity: 0; transform: scale(0.98) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-  .tab-panel { min-height: 28rem; }
+  .modal-enter { animation: modalIn 0.15s ease-out; }
+  @keyframes modalIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  .tab-panel { min-height: 20rem; }
+  .tab-btn { color: #475569; }
   .tab-btn[aria-selected="true"] {
     color: #006438;
     border-bottom-color: #006438;
-    background: rgba(0,100,56,0.06);
   }
+  .fade-out { transition: opacity 0.25s ease; opacity: 0; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
 </style>
 </head>
-<body class="bg-surface text-on-surface font-body min-h-screen">
-<nav class="fixed top-0 w-full z-40 glass-nav shadow-sm border-b border-slate-200/80" aria-label="Ana menü">
-  <div class="flex flex-wrap justify-between items-center gap-4 px-6 py-4 max-w-7xl mx-auto">
-    <a href="index.html" class="flex items-center gap-3">
-      <img src="assets/logo.png" width="40" height="40" alt="Çöp Avcısı" class="rounded-2xl shadow-md ring-1 ring-slate-200/80"/>
-      <div>
-        <span class="block text-lg font-black tracking-tighter text-green-900 leading-tight">ÇÖP AVCISI</span>
-        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Yönetici</span>
+<body class="bg-slate-50 text-on-surface font-body min-h-screen">
+<nav class="sticky top-0 z-40 w-full bg-white border-b border-slate-200" aria-label="Ana menü">
+  <div class="h-14 flex items-center justify-between gap-4 px-4 sm:px-6 max-w-7xl mx-auto">
+    <a href="index.html" class="flex items-center gap-2.5 min-w-0">
+      <img src="assets/logo.png" width="32" height="32" alt="Çöp Avcısı" class="w-8 h-8 rounded-lg object-cover shrink-0"/>
+      <div class="leading-tight min-w-0">
+        <span class="block text-sm font-bold tracking-tight text-slate-900 truncate">ÇÖP AVCISI</span>
+        <span class="block text-[11px] font-medium text-slate-500">Yönetici</span>
       </div>
     </a>
-    <div class="flex items-center gap-2 sm:gap-3 text-sm flex-wrap justify-end">
-      <span class="hidden sm:inline-block px-3 py-1 rounded-full bg-primary/10 text-primary font-semibold text-xs tracking-wide">ADMIN PANEL</span>
-      <button type="button" id="refreshBtn" class="hidden-important inline-flex items-center gap-2 bg-white border border-slate-300 text-slate-700 font-semibold px-4 py-2 rounded-full hover:bg-slate-50 text-sm shadow-sm">
-        <span class="material-symbols-outlined text-base">refresh</span>
-        Yenile
+    <div class="flex items-center gap-2 text-sm shrink-0">
+      <button type="button" id="refreshBtn" class="hidden-important inline-flex items-center gap-1.5 h-9 px-3 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-50">
+        <span class="material-symbols-outlined text-[18px]">refresh</span>
+        <span class="hidden sm:inline">Yenile</span>
       </button>
-      <button id="logoutBtn" class="hidden-important text-slate-700 hover:text-red-600 font-semibold text-sm px-3 py-2 rounded-full border border-slate-300 hover:border-red-200 transition-colors">
+      <button id="logoutBtn" class="hidden-important h-9 px-3 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors">
         Çıkış
       </button>
     </div>
   </div>
 </nav>
 
-<main class="pt-28 pb-24 px-6 max-w-7xl mx-auto">
+<main class="px-4 sm:px-6 pb-16 max-w-7xl mx-auto">
 
-  <section id="loginView" class="card-legal bg-white border border-slate-200 rounded-[2rem] p-8 md:p-12 max-w-md mx-auto shadow-sm">
+  <section id="loginView" class="bg-white border border-slate-200 rounded-xl p-8 max-w-md mx-auto mt-12 shadow-sm">
     <div class="flex items-center gap-3 mb-6">
-      <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-        <span class="material-symbols-outlined text-primary">lock</span>
+      <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-primary text-[20px]">lock</span>
       </div>
       <div>
-        <h1 class="text-xl font-bold text-on-surface tracking-tight">Admin girişi</h1>
-        <p class="text-xs text-slate-600">Kontrol merkezine erişmek için şifre gerekli.</p>
+        <h1 class="text-lg font-semibold text-slate-900 tracking-tight">Admin girişi</h1>
+        <p class="text-xs text-slate-500">Kontrol merkezine erişmek için şifre gerekli.</p>
       </div>
     </div>
     <form id="loginForm" class="space-y-4">
       <label class="block">
-        <span class="block text-xs font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Şifre</span>
+        <span class="block text-xs font-medium text-slate-600 mb-1.5">Şifre</span>
         <input id="pwdInput" type="password" autocomplete="current-password" required
-               class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
+               class="w-full h-10 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
       </label>
       <button type="submit" id="loginBtn"
-              class="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary-container transition-colors">
+              class="w-full h-10 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-container transition-colors">
         Giriş yap
       </button>
       <p id="loginError" class="text-sm text-red-600 min-h-[1.25rem]" aria-live="polite"></p>
@@ -78,218 +80,220 @@
   </section>
 
   <section id="appView" class="hidden-important">
-    <header class="mb-6">
-      <p class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Kontrol merkezi</p>
-      <h1 class="text-3xl md:text-[2.125rem] font-extrabold tracking-[-0.03em] text-on-surface leading-tight">
-        Admin dashboard
-      </h1>
-      <p class="text-sm text-slate-600 mt-2 max-w-2xl min-h-[2.5rem]">
-        Rapor moderasyonu, iletim durumu, belediye e-posta ayarları ve kullanıcılar.
-      </p>
-    </header>
-
-    <div class="border-b border-slate-200 mb-8 overflow-x-auto" role="tablist" aria-label="Admin sekmeleri">
-      <div class="flex min-w-max gap-1">
-        <button type="button" role="tab" class="tab-btn px-4 py-3 text-sm font-semibold text-slate-600 border-b-2 border-transparent whitespace-nowrap" data-tab="overview" aria-selected="true">Özet</button>
-        <button type="button" role="tab" class="tab-btn px-4 py-3 text-sm font-semibold text-slate-600 border-b-2 border-transparent whitespace-nowrap" data-tab="moderation" aria-selected="false">Moderasyon</button>
-        <button type="button" role="tab" class="tab-btn px-4 py-3 text-sm font-semibold text-slate-600 border-b-2 border-transparent whitespace-nowrap" data-tab="reports" aria-selected="false">Raporlar</button>
-        <button type="button" role="tab" class="tab-btn px-4 py-3 text-sm font-semibold text-slate-600 border-b-2 border-transparent whitespace-nowrap" data-tab="municipalities" aria-selected="false">Belediyeler</button>
-        <button type="button" role="tab" class="tab-btn px-4 py-3 text-sm font-semibold text-slate-600 border-b-2 border-transparent whitespace-nowrap" data-tab="users" aria-selected="false">Kullanıcılar</button>
+    <div class="sticky top-14 z-30 bg-white border-b border-slate-200 overflow-x-auto" role="tablist" aria-label="Admin sekmeleri">
+      <div class="flex min-w-max">
+        <button type="button" role="tab" class="tab-btn h-11 px-3.5 text-sm font-medium border-b-2 border-transparent whitespace-nowrap" data-tab="overview" aria-selected="true">Özet</button>
+        <button type="button" role="tab" class="tab-btn h-11 px-3.5 text-sm font-medium border-b-2 border-transparent whitespace-nowrap" data-tab="moderation" aria-selected="false">Moderasyon</button>
+        <button type="button" role="tab" class="tab-btn h-11 px-3.5 text-sm font-medium border-b-2 border-transparent whitespace-nowrap" data-tab="reports" aria-selected="false">Raporlar</button>
+        <button type="button" role="tab" class="tab-btn h-11 px-3.5 text-sm font-medium border-b-2 border-transparent whitespace-nowrap" data-tab="municipalities" aria-selected="false">Belediyeler</button>
+        <button type="button" role="tab" class="tab-btn h-11 px-3.5 text-sm font-medium border-b-2 border-transparent whitespace-nowrap" data-tab="users" aria-selected="false">Kullanıcılar</button>
       </div>
     </div>
 
+    <p class="text-sm text-slate-500 max-w-2xl py-4 min-h-[2.75rem]">
+      Rapor moderasyonu, iletim durumu, belediye e-posta ayarları ve kullanıcılar.
+    </p>
+
     <!-- Özet -->
     <div id="tab-overview" class="tab-panel" role="tabpanel">
-      <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 mb-8">
-        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Toplam</p>
-          <p class="text-2xl font-black tabular-nums mt-1" id="statTotal">—</p>
+      <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 mb-4">
+        <div class="bg-white border border-slate-200 border-l-2 border-l-slate-300 rounded-xl p-4">
+          <p class="text-[11px] font-medium uppercase tracking-wide text-slate-500">Toplam</p>
+          <p class="text-2xl font-semibold text-slate-900 tabular-nums mt-1" id="statTotal">—</p>
         </div>
-        <div class="rounded-2xl border border-emerald-200/80 bg-gradient-to-br from-white to-emerald-50/50 p-4 shadow-sm">
-          <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-800/70">Bekleyen</p>
-          <p class="text-2xl font-black text-emerald-900 tabular-nums mt-1" id="statPending">—</p>
+        <div class="bg-white border border-slate-200 border-l-2 border-l-emerald-500 rounded-xl p-4">
+          <p class="text-[11px] font-medium uppercase tracking-wide text-slate-500">Bekleyen</p>
+          <p class="text-2xl font-semibold text-slate-900 tabular-nums mt-1" id="statPending">—</p>
         </div>
-        <div class="rounded-2xl border border-amber-200/80 bg-gradient-to-br from-white to-amber-50/40 p-4 shadow-sm">
-          <p class="text-[10px] font-bold uppercase tracking-wider text-amber-900/70">Kuyruk</p>
-          <p class="text-2xl font-black text-amber-900 tabular-nums mt-1" id="statQueued">—</p>
+        <div class="bg-white border border-slate-200 border-l-2 border-l-amber-500 rounded-xl p-4">
+          <p class="text-[11px] font-medium uppercase tracking-wide text-slate-500">Kuyruk</p>
+          <p class="text-2xl font-semibold text-slate-900 tabular-nums mt-1" id="statQueued">—</p>
         </div>
-        <div class="rounded-2xl border border-sky-200/80 bg-gradient-to-br from-white to-sky-50/50 p-4 shadow-sm">
-          <p class="text-[10px] font-bold uppercase tracking-wider text-sky-800/70">İletildi</p>
-          <p class="text-2xl font-black text-sky-900 tabular-nums mt-1" id="statDelivered">—</p>
+        <div class="bg-white border border-slate-200 border-l-2 border-l-sky-500 rounded-xl p-4">
+          <p class="text-[11px] font-medium uppercase tracking-wide text-slate-500">İletildi</p>
+          <p class="text-2xl font-semibold text-slate-900 tabular-nums mt-1" id="statDelivered">—</p>
         </div>
-        <div class="rounded-2xl border border-orange-200/80 bg-white p-4 shadow-sm">
-          <p class="text-[10px] font-bold uppercase tracking-wider text-orange-800/70">İletilemedi</p>
-          <p class="text-2xl font-black text-orange-900 tabular-nums mt-1" id="statNotDelivered">—</p>
+        <div class="bg-white border border-slate-200 border-l-2 border-l-orange-500 rounded-xl p-4">
+          <p class="text-[11px] font-medium uppercase tracking-wide text-slate-500">İletilemedi</p>
+          <p class="text-2xl font-semibold text-slate-900 tabular-nums mt-1" id="statNotDelivered">—</p>
         </div>
-        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Reddedilen</p>
-          <p class="text-2xl font-black tabular-nums mt-1" id="statRejected">—</p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-8">
-        <div class="rounded-2xl border border-slate-200 bg-white p-4">
-          <p class="text-xs text-slate-500 font-semibold">Son 7 gün · oluşturulan</p>
-          <p class="text-xl font-black tabular-nums mt-1" id="statCreated7">—</p>
-        </div>
-        <div class="rounded-2xl border border-slate-200 bg-white p-4">
-          <p class="text-xs text-slate-500 font-semibold">Son 7 gün · onaylanan</p>
-          <p class="text-xl font-black tabular-nums mt-1" id="statApproved7">—</p>
-        </div>
-        <div class="rounded-2xl border border-slate-200 bg-white p-4">
-          <p class="text-xs text-slate-500 font-semibold">Son 7 gün · iletilen</p>
-          <p class="text-xl font-black tabular-nums mt-1" id="statDelivered7">—</p>
-        </div>
-        <div class="rounded-2xl border border-slate-200 bg-white p-4">
-          <p class="text-xs text-slate-500 font-semibold">Son 30 gün · oluşturulan</p>
-          <p class="text-xl font-black tabular-nums mt-1" id="statCreated30">—</p>
+        <div class="bg-white border border-slate-200 border-l-2 border-l-red-400 rounded-xl p-4">
+          <p class="text-[11px] font-medium uppercase tracking-wide text-slate-500">Reddedilen</p>
+          <p class="text-2xl font-semibold text-slate-900 tabular-nums mt-1" id="statRejected">—</p>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
-        <div class="rounded-2xl border border-slate-200 bg-white p-4">
-          <p class="text-xs text-slate-500 font-semibold">Belediye</p>
-          <p class="text-xl font-black tabular-nums mt-1" id="statMuniTotal">—</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <p class="text-[11px] font-medium uppercase tracking-wide text-slate-500">Son 7 gün · oluşturulan</p>
+          <p class="text-xl font-semibold text-slate-900 tabular-nums mt-1" id="statCreated7">—</p>
         </div>
-        <div class="rounded-2xl border border-slate-200 bg-white p-4">
-          <p class="text-xs text-slate-500 font-semibold">E-posta opt-out</p>
-          <p class="text-xl font-black tabular-nums mt-1" id="statMuniOptOut">—</p>
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <p class="text-[11px] font-medium uppercase tracking-wide text-slate-500">Son 7 gün · onaylanan</p>
+          <p class="text-xl font-semibold text-slate-900 tabular-nums mt-1" id="statApproved7">—</p>
         </div>
-        <div class="rounded-2xl border border-slate-200 bg-white p-4">
-          <p class="text-xs text-slate-500 font-semibold">Kullanıcı</p>
-          <p class="text-xl font-black tabular-nums mt-1" id="statUsers">—</p>
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <p class="text-[11px] font-medium uppercase tracking-wide text-slate-500">Son 7 gün · iletilen</p>
+          <p class="text-xl font-semibold text-slate-900 tabular-nums mt-1" id="statDelivered7">—</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <p class="text-[11px] font-medium uppercase tracking-wide text-slate-500">Son 30 gün · oluşturulan</p>
+          <p class="text-xl font-semibold text-slate-900 tabular-nums mt-1" id="statCreated30">—</p>
         </div>
       </div>
 
-      <div id="overviewError" class="hidden mb-4 bg-red-50 border border-red-200 rounded-2xl p-4 text-sm text-red-800"></div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <p class="text-[11px] font-medium uppercase tracking-wide text-slate-500">Belediye</p>
+          <p class="text-xl font-semibold text-slate-900 tabular-nums mt-1" id="statMuniTotal">—</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <p class="text-[11px] font-medium uppercase tracking-wide text-slate-500">E-posta opt-out</p>
+          <p class="text-xl font-semibold text-slate-900 tabular-nums mt-1" id="statMuniOptOut">—</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <p class="text-[11px] font-medium uppercase tracking-wide text-slate-500">Kullanıcı</p>
+          <p class="text-xl font-semibold text-slate-900 tabular-nums mt-1" id="statUsers">—</p>
+        </div>
+      </div>
+
+      <div id="overviewError" class="hidden mb-4 bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-800"></div>
       <div id="overviewLoading" class="hidden text-center py-10 text-slate-500 text-sm">
         <span class="spinner"></span>
         <p class="mt-3">Özet yükleniyor…</p>
       </div>
 
-      <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <div>
-          <h2 class="text-lg font-bold mb-3 flex items-center gap-2">
-            <span class="material-symbols-outlined text-sky-700">outgoing_mail</span>
+          <h2 class="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[18px] text-sky-600">outgoing_mail</span>
             Son iletilenler
           </h2>
-          <ul id="recentDeliveredList" class="space-y-3"></ul>
-          <p id="recentDeliveredEmpty" class="hidden text-sm text-slate-500 py-8 text-center border border-dashed border-slate-200 rounded-2xl">Kayıt yok.</p>
+          <div class="bg-white border border-slate-200 rounded-xl overflow-hidden min-h-[14rem]">
+            <ul id="recentDeliveredList" class="divide-y divide-slate-100"></ul>
+            <p id="recentDeliveredEmpty" class="hidden text-sm text-slate-500 py-12 text-center">Kayıt yok.</p>
+          </div>
         </div>
         <div>
-          <h2 class="text-lg font-bold mb-3 flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">pending_actions</span>
+          <h2 class="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[18px] text-primary">pending_actions</span>
             Son bekleyenler
           </h2>
-          <ul id="recentPendingList" class="space-y-3"></ul>
-          <p id="recentPendingEmpty" class="hidden text-sm text-slate-500 py-8 text-center border border-dashed border-slate-200 rounded-2xl">Kayıt yok.</p>
+          <div class="bg-white border border-slate-200 rounded-xl overflow-hidden min-h-[14rem]">
+            <ul id="recentPendingList" class="divide-y divide-slate-100"></ul>
+            <p id="recentPendingEmpty" class="hidden text-sm text-slate-500 py-12 text-center">Kayıt yok.</p>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Moderasyon -->
     <div id="tab-moderation" class="tab-panel hidden-important" role="tabpanel">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        <div class="rounded-2xl border border-emerald-200/80 bg-gradient-to-br from-white to-emerald-50/50 p-5 shadow-sm">
-          <div class="flex items-center justify-between gap-2 mb-3">
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-800/70">Moderasyon bekleyen</span>
-            <span class="material-symbols-outlined text-emerald-700 text-xl">hourglass_empty</span>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+        <div class="bg-white border border-slate-200 border-l-2 border-l-emerald-500 rounded-xl p-4">
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <span class="text-[11px] font-medium uppercase tracking-wide text-slate-500">Moderasyon bekleyen</span>
+            <span class="material-symbols-outlined text-emerald-600 text-[18px]">hourglass_empty</span>
           </div>
-          <p class="text-3xl font-black text-emerald-900 tabular-nums" id="countBadge">0</p>
-          <p class="text-xs text-slate-600 mt-1 min-h-[1rem]">Onay veya red bekleyen raporlar</p>
+          <p class="text-2xl font-semibold text-slate-900 tabular-nums" id="countBadge">0</p>
+          <p class="text-xs text-slate-500 mt-1 min-h-[1rem]">Onay veya red bekleyen raporlar</p>
         </div>
-        <div class="rounded-2xl border border-amber-200/80 bg-gradient-to-br from-white to-amber-50/40 p-5 shadow-sm">
-          <div class="flex items-center justify-between gap-2 mb-3">
-            <span class="text-xs font-bold uppercase tracking-wider text-amber-900/70">E-posta kuyruğu</span>
-            <span class="material-symbols-outlined text-amber-700 text-xl">schedule_send</span>
+        <div class="bg-white border border-slate-200 border-l-2 border-l-amber-500 rounded-xl p-4">
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <span class="text-[11px] font-medium uppercase tracking-wide text-slate-500">E-posta kuyruğu</span>
+            <span class="material-symbols-outlined text-amber-600 text-[18px]">schedule_send</span>
           </div>
-          <p class="text-3xl font-black text-amber-900 tabular-nums" id="queueCountBadge">0</p>
-          <p class="text-xs text-slate-600 mt-1 min-h-[1rem]">Özet postaya henüz dahil edilmemiş onaylı raporlar</p>
+          <p class="text-2xl font-semibold text-slate-900 tabular-nums" id="queueCountBadge">0</p>
+          <p class="text-xs text-slate-500 mt-1 min-h-[1rem]">Özet postaya henüz dahil edilmemiş onaylı raporlar</p>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 xl:gap-10">
-        <div class="space-y-4">
-          <div class="flex items-center gap-2 border-b border-slate-200 pb-3">
-            <span class="material-symbols-outlined text-primary">pending_actions</span>
-            <h2 class="text-lg font-bold text-on-surface">İşlem bekleyen raporlar</h2>
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8">
+        <div class="space-y-3">
+          <div class="flex items-center gap-2 border-b border-slate-200 pb-2.5">
+            <span class="material-symbols-outlined text-primary text-[18px]">pending_actions</span>
+            <h2 class="text-sm font-semibold text-slate-800">İşlem bekleyen raporlar</h2>
           </div>
-          <p class="text-xs text-slate-600 min-h-[2.625rem] leading-relaxed">Onay veya red verin; onaylananlar sağdaki günlük özet kuyruğuna düşer.</p>
-          <div id="listState" class="text-center py-12 text-slate-500 text-sm hidden rounded-2xl border border-dashed border-slate-200 bg-white/60">
+          <p class="text-xs text-slate-500 min-h-[2.25rem] leading-relaxed">Onay veya red verin; onaylananlar sağdaki günlük özet kuyruğuna düşer.</p>
+          <div id="listState" class="text-center py-12 text-slate-500 text-sm hidden rounded-xl border border-dashed border-slate-200 bg-white">
             <span class="spinner"></span>
             <p class="mt-3">Yükleniyor…</p>
           </div>
-          <div id="emptyState" class="hidden text-center py-14 bg-white rounded-2xl border border-dashed border-slate-300">
-            <span class="material-symbols-outlined text-5xl text-slate-300">inbox</span>
-            <p class="mt-2 text-slate-700 font-semibold">Bekleyen rapor yok</p>
+          <div id="emptyState" class="hidden text-center py-14 bg-white rounded-xl border border-dashed border-slate-300">
+            <span class="material-symbols-outlined text-4xl text-slate-300">inbox</span>
+            <p class="mt-2 text-slate-700 font-medium text-sm">Bekleyen rapor yok</p>
             <p class="text-xs text-slate-500 mt-1">Yeni raporlar burada listelenir.</p>
           </div>
-          <div id="errorState" class="hidden bg-red-50 border border-red-200 rounded-2xl p-4 text-sm text-red-800"></div>
-          <ul id="reportsList" class="space-y-4"></ul>
+          <div id="errorState" class="hidden bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-800"></div>
+          <ul id="reportsList" class="space-y-3"></ul>
         </div>
 
-        <div class="space-y-4">
-          <div class="flex items-center gap-2 border-b border-amber-200/80 pb-3">
-            <span class="material-symbols-outlined text-amber-700">mail</span>
-            <h2 class="text-lg font-bold text-on-surface">Günlük özet e-posta kuyruğu</h2>
+        <div class="space-y-3">
+          <div class="flex items-center gap-2 border-b border-slate-200 pb-2.5">
+            <span class="material-symbols-outlined text-amber-600 text-[18px]">mail</span>
+            <h2 class="text-sm font-semibold text-slate-800">Günlük özet e-posta kuyruğu</h2>
           </div>
-          <p class="text-xs text-slate-600 min-h-[2.625rem] leading-relaxed">Salt okunur. Zamanlanan gönderimde belediyelere gider.</p>
-          <div id="queueListState" class="text-center py-10 text-slate-500 text-sm hidden rounded-2xl border border-dashed border-amber-100 bg-amber-50/20">
+          <p class="text-xs text-slate-500 min-h-[2.25rem] leading-relaxed">Salt okunur. Zamanlanan gönderimde belediyelere gider.</p>
+          <div id="queueListState" class="text-center py-10 text-slate-500 text-sm hidden rounded-xl border border-dashed border-slate-200 bg-white">
             <span class="spinner"></span>
             <p class="mt-3">Kuyruk yükleniyor…</p>
           </div>
-          <div id="queueEmptyState" class="hidden text-center py-12 bg-amber-50/40 rounded-2xl border border-dashed border-amber-200/80">
-            <span class="material-symbols-outlined text-5xl text-amber-200">schedule_send</span>
-            <p class="mt-2 text-slate-700 font-semibold">Kuyrukta rapor yok</p>
+          <div id="queueEmptyState" class="hidden text-center py-12 bg-white rounded-xl border border-dashed border-slate-200">
+            <span class="material-symbols-outlined text-4xl text-slate-300">schedule_send</span>
+            <p class="mt-2 text-slate-700 font-medium text-sm">Kuyrukta rapor yok</p>
             <p class="text-xs text-slate-500 mt-1">Onayladıkça burada görünür.</p>
           </div>
-          <div id="queueErrorState" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-4 text-sm text-amber-900"></div>
-          <ul id="queueList" class="space-y-4 max-h-[min(70vh,720px)] overflow-y-auto pr-1"></ul>
+          <div id="queueErrorState" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-900"></div>
+          <ul id="queueList" class="space-y-3 max-h-[min(70vh,720px)] overflow-y-auto pr-1"></ul>
         </div>
       </div>
     </div>
 
     <!-- Raporlar -->
     <div id="tab-reports" class="tab-panel hidden-important" role="tabpanel">
-      <div class="flex flex-col lg:flex-row gap-3 mb-4">
-        <label class="flex-1 block">
-          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Durum</span>
-          <select id="repPipeline" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm">
-            <option value="all">Tümü</option>
-            <option value="pending">Bekliyor</option>
-            <option value="queued">Kuyrukta</option>
-            <option value="delivered">İletildi</option>
-            <option value="not_delivered">İletilemedi</option>
-            <option value="rejected">Reddedildi</option>
-          </select>
-        </label>
-        <label class="flex-1 block">
-          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Şehir</span>
-          <input id="repCity" type="text" placeholder="örn. İstanbul" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
-        </label>
-        <label class="flex-1 block">
-          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Arama</span>
-          <input id="repQ" type="text" placeholder="Adres veya açıklama" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
-        </label>
-        <label class="flex-1 block">
-          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Rapor ID</span>
-          <input id="repId" type="text" placeholder="UUID" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm font-mono"/>
-        </label>
-      </div>
-      <div class="flex flex-wrap gap-2 mb-6">
-        <button type="button" id="repApply" class="bg-primary text-white font-semibold px-4 py-2.5 rounded-xl text-sm hover:bg-primary-container">Filtrele</button>
-        <button type="button" id="repClear" class="bg-slate-100 text-slate-800 font-semibold px-4 py-2.5 rounded-xl text-sm hover:bg-slate-200">Temizle</button>
-        <p class="text-sm text-slate-600 self-center ml-auto tabular-nums" id="repPageLabel">—</p>
+      <div class="bg-white border border-slate-200 rounded-xl p-3 mb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <label class="block">
+            <span class="block text-xs font-medium text-slate-600 mb-1.5">Durum</span>
+            <select id="repPipeline" class="w-full h-9 rounded-lg border border-slate-300 px-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+              <option value="all">Tümü</option>
+              <option value="pending">Bekliyor</option>
+              <option value="queued">Kuyrukta</option>
+              <option value="delivered">İletildi</option>
+              <option value="not_delivered">İletilemedi</option>
+              <option value="rejected">Reddedildi</option>
+            </select>
+          </label>
+          <label class="block">
+            <span class="block text-xs font-medium text-slate-600 mb-1.5">Şehir</span>
+            <input id="repCity" type="text" placeholder="örn. İstanbul" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
+          </label>
+          <label class="block">
+            <span class="block text-xs font-medium text-slate-600 mb-1.5">Arama</span>
+            <input id="repQ" type="text" placeholder="Adres veya açıklama" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
+          </label>
+          <label class="block">
+            <span class="block text-xs font-medium text-slate-600 mb-1.5">Rapor ID</span>
+            <input id="repId" type="text" placeholder="UUID" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm font-mono focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
+          </label>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 mt-3">
+          <button type="button" id="repApply" class="h-9 px-4 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-container">Filtrele</button>
+          <button type="button" id="repClear" class="h-9 px-4 rounded-lg bg-slate-100 text-slate-700 text-sm font-medium hover:bg-slate-200">Temizle</button>
+          <p class="text-sm text-slate-500 ml-auto tabular-nums" id="repPageLabel">—</p>
+        </div>
       </div>
       <div id="repListState" class="hidden text-center py-10 text-slate-500 text-sm"><span class="spinner"></span><p class="mt-2">Yükleniyor…</p></div>
-      <div id="repErrorState" class="hidden bg-red-50 border border-red-200 rounded-2xl p-4 text-sm text-red-800 mb-4"></div>
-      <div id="repEmptyState" class="hidden text-center py-12 text-slate-500 text-sm border border-dashed border-slate-200 rounded-2xl">Kayıt yok.</div>
-      <ul id="allReportsList" class="space-y-3 mb-6"></ul>
+      <div id="repErrorState" class="hidden bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-800 mb-4"></div>
+      <div class="bg-white border border-slate-200 rounded-xl overflow-hidden min-h-[20rem] mb-4">
+        <ul id="allReportsList" class="divide-y divide-slate-100"></ul>
+        <div id="repEmptyState" class="hidden text-center py-14 text-slate-500 text-sm">Kayıt yok.</div>
+      </div>
       <div class="flex flex-wrap items-center justify-between gap-3">
-        <button type="button" id="repPrev" class="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 px-4 py-2 rounded-full border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none">
+        <button type="button" id="repPrev" class="inline-flex items-center gap-1 h-9 px-4 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none">
           <span class="material-symbols-outlined text-base">chevron_left</span> Önceki
         </button>
-        <button type="button" id="repNext" class="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 px-4 py-2 rounded-full border border-slate-300 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none">
+        <button type="button" id="repNext" class="inline-flex items-center gap-1 h-9 px-4 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none">
           Sonraki <span class="material-symbols-outlined text-base">chevron_right</span>
         </button>
       </div>
@@ -297,47 +301,51 @@
 
     <!-- Belediyeler -->
     <div id="tab-municipalities" class="tab-panel hidden-important" role="tabpanel">
-      <div class="flex flex-col lg:flex-row gap-3 mb-4">
-        <label class="flex-1 block">
-          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Ara</span>
-          <input id="muniQ" type="text" placeholder="Ad, şehir, ilçe, e-posta" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
-        </label>
-        <label class="block min-w-[10rem]">
-          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Bildirim</span>
-          <select id="muniNotify" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm">
-            <option value="">Tümü</option>
-            <option value="true">Açık</option>
-            <option value="false">Kapalı (opt-out)</option>
-          </select>
-        </label>
-        <label class="block min-w-[10rem]">
-          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Aktif</span>
-          <select id="muniActive" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm">
-            <option value="">Tümü</option>
-            <option value="true">Aktif</option>
-            <option value="false">Pasif</option>
-          </select>
-        </label>
-        <label class="flex items-end gap-2 pb-1 min-w-[9rem]">
-          <input id="muniMissingEmail" type="checkbox" class="rounded border-slate-300 text-primary focus:ring-primary"/>
-          <span class="text-xs font-semibold text-slate-700">E-posta yok</span>
-        </label>
-      </div>
-      <div class="flex flex-wrap gap-2 mb-6">
-        <button type="button" id="muniApply" class="bg-primary text-white font-semibold px-4 py-2.5 rounded-xl text-sm">Filtrele</button>
-        <button type="button" id="muniClear" class="bg-slate-100 text-slate-800 font-semibold px-4 py-2.5 rounded-xl text-sm">Temizle</button>
-        <button type="button" id="muniCreateOpen" class="ml-auto bg-slate-900 text-white font-semibold px-4 py-2.5 rounded-xl text-sm hover:bg-slate-800">+ Yeni belediye</button>
-        <p class="text-sm text-slate-600 self-center tabular-nums w-full sm:w-auto sm:ml-0" id="muniPageLabel">—</p>
+      <div class="bg-white border border-slate-200 rounded-xl p-3 mb-4">
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_10rem_10rem_9rem] gap-3">
+          <label class="block">
+            <span class="block text-xs font-medium text-slate-600 mb-1.5">Ara</span>
+            <input id="muniQ" type="text" placeholder="Ad, şehir, ilçe, e-posta" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
+          </label>
+          <label class="block">
+            <span class="block text-xs font-medium text-slate-600 mb-1.5">Bildirim</span>
+            <select id="muniNotify" class="w-full h-9 rounded-lg border border-slate-300 px-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+              <option value="">Tümü</option>
+              <option value="true">Açık</option>
+              <option value="false">Kapalı (opt-out)</option>
+            </select>
+          </label>
+          <label class="block">
+            <span class="block text-xs font-medium text-slate-600 mb-1.5">Aktif</span>
+            <select id="muniActive" class="w-full h-9 rounded-lg border border-slate-300 px-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+              <option value="">Tümü</option>
+              <option value="true">Aktif</option>
+              <option value="false">Pasif</option>
+            </select>
+          </label>
+          <label class="flex items-center gap-2 pb-0.5 mt-5">
+            <input id="muniMissingEmail" type="checkbox" class="rounded border-slate-300 text-primary focus:ring-primary"/>
+            <span class="text-xs font-medium text-slate-700">E-posta yok</span>
+          </label>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 mt-3">
+          <button type="button" id="muniApply" class="h-9 px-4 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-container">Filtrele</button>
+          <button type="button" id="muniClear" class="h-9 px-4 rounded-lg bg-slate-100 text-slate-700 text-sm font-medium hover:bg-slate-200">Temizle</button>
+          <button type="button" id="muniCreateOpen" class="h-9 px-4 rounded-lg bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 ml-auto">+ Yeni belediye</button>
+          <p class="text-sm text-slate-500 tabular-nums w-full lg:w-auto" id="muniPageLabel">—</p>
+        </div>
       </div>
       <div id="muniListState" class="hidden text-center py-10 text-slate-500 text-sm"><span class="spinner"></span><p class="mt-2">Yükleniyor…</p></div>
-      <div id="muniErrorState" class="hidden bg-red-50 border border-red-200 rounded-2xl p-4 text-sm text-red-800 mb-4"></div>
-      <div id="muniEmptyState" class="hidden text-center py-12 text-slate-500 text-sm border border-dashed border-slate-200 rounded-2xl">Kayıt yok.</div>
-      <ul id="muniList" class="space-y-3 mb-6"></ul>
+      <div id="muniErrorState" class="hidden bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-800 mb-4"></div>
+      <div class="bg-white border border-slate-200 rounded-xl overflow-hidden min-h-[20rem] mb-4">
+        <ul id="muniList" class="divide-y divide-slate-100"></ul>
+        <div id="muniEmptyState" class="hidden text-center py-14 text-slate-500 text-sm">Kayıt yok.</div>
+      </div>
       <div class="flex flex-wrap items-center justify-between gap-3">
-        <button type="button" id="muniPrev" class="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 px-4 py-2 rounded-full border border-slate-300 bg-white disabled:opacity-40 disabled:pointer-events-none">
+        <button type="button" id="muniPrev" class="inline-flex items-center gap-1 h-9 px-4 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none">
           <span class="material-symbols-outlined text-base">chevron_left</span> Önceki
         </button>
-        <button type="button" id="muniNext" class="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 px-4 py-2 rounded-full border border-slate-300 bg-white disabled:opacity-40 disabled:pointer-events-none">
+        <button type="button" id="muniNext" class="inline-flex items-center gap-1 h-9 px-4 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none">
           Sonraki <span class="material-symbols-outlined text-base">chevron_right</span>
         </button>
       </div>
@@ -345,34 +353,38 @@
 
     <!-- Kullanıcılar -->
     <div id="tab-users" class="tab-panel hidden-important" role="tabpanel">
-      <div class="flex flex-col lg:flex-row gap-3 mb-4">
-        <label class="flex-1 block">
-          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Ara</span>
-          <input id="userQ" type="text" placeholder="Kullanıcı adı veya ad" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
-        </label>
-        <label class="block min-w-[10rem]">
-          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Rol</span>
-          <input id="userRole" type="text" placeholder="örn. citizen" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
-        </label>
-        <label class="block min-w-[10rem]">
-          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Tip</span>
-          <input id="userType" type="text" placeholder="örn. individual" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
-        </label>
-      </div>
-      <div class="flex flex-wrap gap-2 mb-6">
-        <button type="button" id="userApply" class="bg-primary text-white font-semibold px-4 py-2.5 rounded-xl text-sm">Filtrele</button>
-        <button type="button" id="userClear" class="bg-slate-100 text-slate-800 font-semibold px-4 py-2.5 rounded-xl text-sm">Temizle</button>
-        <p class="text-sm text-slate-600 self-center ml-auto tabular-nums" id="userPageLabel">—</p>
+      <div class="bg-white border border-slate-200 rounded-xl p-3 mb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <label class="block">
+            <span class="block text-xs font-medium text-slate-600 mb-1.5">Ara</span>
+            <input id="userQ" type="text" placeholder="Kullanıcı adı veya ad" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
+          </label>
+          <label class="block">
+            <span class="block text-xs font-medium text-slate-600 mb-1.5">Rol</span>
+            <input id="userRole" type="text" placeholder="örn. citizen" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
+          </label>
+          <label class="block">
+            <span class="block text-xs font-medium text-slate-600 mb-1.5">Tip</span>
+            <input id="userType" type="text" placeholder="örn. individual" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
+          </label>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 mt-3">
+          <button type="button" id="userApply" class="h-9 px-4 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-container">Filtrele</button>
+          <button type="button" id="userClear" class="h-9 px-4 rounded-lg bg-slate-100 text-slate-700 text-sm font-medium hover:bg-slate-200">Temizle</button>
+          <p class="text-sm text-slate-500 ml-auto tabular-nums" id="userPageLabel">—</p>
+        </div>
       </div>
       <div id="userListState" class="hidden text-center py-10 text-slate-500 text-sm"><span class="spinner"></span><p class="mt-2">Yükleniyor…</p></div>
-      <div id="userErrorState" class="hidden bg-red-50 border border-red-200 rounded-2xl p-4 text-sm text-red-800 mb-4"></div>
-      <div id="userEmptyState" class="hidden text-center py-12 text-slate-500 text-sm border border-dashed border-slate-200 rounded-2xl">Kayıt yok.</div>
-      <ul id="userList" class="space-y-3 mb-6"></ul>
+      <div id="userErrorState" class="hidden bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-800 mb-4"></div>
+      <div class="bg-white border border-slate-200 rounded-xl overflow-hidden min-h-[20rem] mb-4">
+        <ul id="userList" class="divide-y divide-slate-100"></ul>
+        <div id="userEmptyState" class="hidden text-center py-14 text-slate-500 text-sm">Kayıt yok.</div>
+      </div>
       <div class="flex flex-wrap items-center justify-between gap-3">
-        <button type="button" id="userPrev" class="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 px-4 py-2 rounded-full border border-slate-300 bg-white disabled:opacity-40 disabled:pointer-events-none">
+        <button type="button" id="userPrev" class="inline-flex items-center gap-1 h-9 px-4 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none">
           <span class="material-symbols-outlined text-base">chevron_left</span> Önceki
         </button>
-        <button type="button" id="userNext" class="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 px-4 py-2 rounded-full border border-slate-300 bg-white disabled:opacity-40 disabled:pointer-events-none">
+        <button type="button" id="userNext" class="inline-flex items-center gap-1 h-9 px-4 rounded-lg border border-slate-300 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none">
           Sonraki <span class="material-symbols-outlined text-base">chevron_right</span>
         </button>
       </div>
@@ -382,15 +394,15 @@
 
 <!-- Report detail drawer -->
 <div id="reportDrawer" class="hidden fixed inset-0 z-50" aria-hidden="true">
-  <div class="absolute inset-0 bg-slate-900/45 backdrop-blur-sm" data-close-drawer></div>
-  <aside class="modal-enter absolute right-0 top-0 h-full w-full max-w-lg bg-white shadow-2xl border-l border-slate-200 flex flex-col overflow-hidden">
-    <div class="flex items-start justify-between gap-3 p-5 border-b border-slate-100 shrink-0">
+  <div class="absolute inset-0 bg-slate-900/40" data-close-drawer></div>
+  <aside class="modal-enter absolute right-0 top-0 h-full w-full max-w-lg bg-white shadow-xl border-l border-slate-200 flex flex-col overflow-hidden">
+    <div class="flex items-start justify-between gap-3 p-5 border-b border-slate-200 shrink-0">
       <div>
-        <h2 class="text-lg font-extrabold tracking-tight">Rapor detayı</h2>
+        <h2 class="text-base font-semibold text-slate-900 tracking-tight">Rapor detayı</h2>
         <p class="text-[11px] font-mono text-slate-500 break-all mt-1 select-all" id="drawerReportId"></p>
       </div>
-      <button type="button" class="p-2 rounded-full hover:bg-slate-100" data-close-drawer aria-label="Kapat">
-        <span class="material-symbols-outlined">close</span>
+      <button type="button" class="p-2 rounded-lg hover:bg-slate-100" data-close-drawer aria-label="Kapat">
+        <span class="material-symbols-outlined text-[20px]">close</span>
       </button>
     </div>
     <div id="drawerBody" class="flex-1 overflow-y-auto p-5 text-sm"></div>
@@ -398,104 +410,104 @@
 </div>
 
 <!-- Municipality edit modal -->
-<div id="muniModal" class="hidden fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-8 overflow-y-auto bg-slate-900/50 backdrop-blur-sm" aria-hidden="true">
-  <div class="modal-enter w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 my-4 sm:my-12 flex flex-col max-h-[90vh]">
-    <div class="flex items-start justify-between gap-4 p-5 sm:p-6 border-b border-slate-100 shrink-0">
+<div id="muniModal" class="hidden fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-8 overflow-y-auto bg-slate-900/40" aria-hidden="true">
+  <div class="modal-enter w-full max-w-2xl bg-white rounded-xl shadow-xl border border-slate-200 my-4 sm:my-12 flex flex-col max-h-[90vh]">
+    <div class="flex items-start justify-between gap-4 p-5 sm:p-6 border-b border-slate-200 shrink-0">
       <div>
-        <h2 class="text-xl font-extrabold tracking-tight" id="muniModalTitle">Belediye</h2>
-        <p class="text-xs text-slate-600 mt-1" id="muniModalSub">E-posta ve bildirim ayarları</p>
+        <h2 class="text-lg font-semibold text-slate-900 tracking-tight" id="muniModalTitle">Belediye</h2>
+        <p class="text-xs text-slate-500 mt-1" id="muniModalSub">E-posta ve bildirim ayarları</p>
       </div>
-      <button type="button" id="muniModalClose" class="p-2 rounded-full hover:bg-slate-100" aria-label="Kapat">
-        <span class="material-symbols-outlined">close</span>
+      <button type="button" id="muniModalClose" class="p-2 rounded-lg hover:bg-slate-100" aria-label="Kapat">
+        <span class="material-symbols-outlined text-[20px]">close</span>
       </button>
     </div>
     <form id="muniForm" class="p-5 sm:p-6 space-y-4 overflow-y-auto">
       <input type="hidden" id="muniEditId"/>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="muniCreateFields">
         <label class="block sm:col-span-2">
-          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Ad *</span>
-          <input id="muniName" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+          <span class="block text-xs font-medium text-slate-600 mb-1.5">Ad *</span>
+          <input id="muniName" type="text" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
         </label>
         <label class="block">
-          <span class="block text-xs font-semibold text-slate-600 mb-1.5">Şehir *</span>
-          <input id="muniCity" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+          <span class="block text-xs font-medium text-slate-600 mb-1.5">Şehir *</span>
+          <input id="muniCity" type="text" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
         </label>
         <label class="block">
-          <span class="block text-xs font-semibold text-slate-600 mb-1.5">İlçe *</span>
-          <input id="muniDistrict" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+          <span class="block text-xs font-medium text-slate-600 mb-1.5">İlçe *</span>
+          <input id="muniDistrict" type="text" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
         </label>
       </div>
       <label class="block">
-        <span class="block text-xs font-semibold text-slate-600 mb-1.5">E-posta</span>
-        <input id="muniEmail" type="email" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+        <span class="block text-xs font-medium text-slate-600 mb-1.5">E-posta</span>
+        <input id="muniEmail" type="email" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
       </label>
       <label class="block">
-        <span class="block text-xs font-semibold text-slate-600 mb-1.5">WhatsApp</span>
-        <input id="muniWhatsapp" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+        <span class="block text-xs font-medium text-slate-600 mb-1.5">WhatsApp</span>
+        <input id="muniWhatsapp" type="text" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
       </label>
       <div class="flex flex-wrap gap-4" id="muniEditFlags">
-        <label class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+        <label class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
           <input id="muniEmailEnabled" type="checkbox" class="rounded border-slate-300 text-primary focus:ring-primary"/>
           E-posta bildirimi açık
         </label>
-        <label class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+        <label class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
           <input id="muniIsActive" type="checkbox" class="rounded border-slate-300 text-primary focus:ring-primary"/>
           Aktif
         </label>
       </div>
-      <div id="districtEmailsSection" class="hidden border-t border-slate-100 pt-4 space-y-3">
-        <h3 class="text-sm font-bold">İlçe e-postaları</h3>
+      <div id="districtEmailsSection" class="hidden border-t border-slate-200 pt-4 space-y-3">
+        <h3 class="text-sm font-semibold text-slate-800">İlçe e-postaları</h3>
         <ul id="districtEmailList" class="space-y-2 text-xs"></ul>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <input id="distKey" type="text" placeholder="İlçe anahtarı" class="rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
-          <input id="distEmail" type="email" placeholder="E-posta" class="rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
-          <input id="distKep" type="email" placeholder="KEP" class="rounded-xl border border-slate-300 px-3 py-2 text-sm"/>
+          <input id="distKey" type="text" placeholder="İlçe anahtarı" class="h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
+          <input id="distEmail" type="email" placeholder="E-posta" class="h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
+          <input id="distKep" type="email" placeholder="KEP" class="h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
         </div>
-        <button type="button" id="distUpsertBtn" class="bg-slate-100 text-slate-800 font-semibold px-3 py-2 rounded-xl text-sm hover:bg-slate-200">İlçe e-posta kaydet</button>
+        <button type="button" id="distUpsertBtn" class="h-9 px-3.5 rounded-lg bg-slate-100 text-slate-700 font-medium text-sm hover:bg-slate-200">İlçe e-posta kaydet</button>
       </div>
       <div class="flex justify-end gap-2 pt-2">
-        <button type="button" id="muniModalCancel" class="px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-300">İptal</button>
-        <button type="submit" id="muniSaveBtn" class="bg-primary text-white font-bold px-5 py-2.5 rounded-xl text-sm">Kaydet</button>
+        <button type="button" id="muniModalCancel" class="h-9 px-4 rounded-lg text-sm font-medium border border-slate-300 text-slate-700 hover:bg-slate-50">İptal</button>
+        <button type="submit" id="muniSaveBtn" class="h-9 px-5 rounded-lg bg-primary text-white font-semibold text-sm hover:bg-primary-container">Kaydet</button>
       </div>
     </form>
   </div>
 </div>
 
 <!-- User edit modal -->
-<div id="userModal" class="hidden fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-8 overflow-y-auto bg-slate-900/50 backdrop-blur-sm" aria-hidden="true">
-  <div class="modal-enter w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 my-8 p-6">
+<div id="userModal" class="hidden fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-8 overflow-y-auto bg-slate-900/40" aria-hidden="true">
+  <div class="modal-enter w-full max-w-md bg-white rounded-xl shadow-xl border border-slate-200 my-8 p-6">
     <div class="flex items-start justify-between gap-3 mb-4">
       <div>
-        <h2 class="text-lg font-extrabold">Kullanıcı düzenle</h2>
+        <h2 class="text-base font-semibold text-slate-900">Kullanıcı düzenle</h2>
         <p class="text-[11px] font-mono text-slate-500 break-all mt-1" id="userEditIdLabel"></p>
       </div>
-      <button type="button" id="userModalClose" class="p-2 rounded-full hover:bg-slate-100" aria-label="Kapat">
-        <span class="material-symbols-outlined">close</span>
+      <button type="button" id="userModalClose" class="p-2 rounded-lg hover:bg-slate-100" aria-label="Kapat">
+        <span class="material-symbols-outlined text-[20px]">close</span>
       </button>
     </div>
     <form id="userForm" class="space-y-3">
       <input type="hidden" id="userEditId"/>
       <label class="block">
-        <span class="block text-xs font-semibold text-slate-600 mb-1.5">Rol</span>
-        <input id="userEditRole" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+        <span class="block text-xs font-medium text-slate-600 mb-1.5">Rol</span>
+        <input id="userEditRole" type="text" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
       </label>
       <label class="block">
-        <span class="block text-xs font-semibold text-slate-600 mb-1.5">Tip</span>
-        <input id="userEditType" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm"/>
+        <span class="block text-xs font-medium text-slate-600 mb-1.5">Tip</span>
+        <input id="userEditType" type="text" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
       </label>
       <label class="block">
-        <span class="block text-xs font-semibold text-slate-600 mb-1.5">Belediye ID (opsiyonel)</span>
-        <input id="userEditMuniId" type="text" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm font-mono"/>
+        <span class="block text-xs font-medium text-slate-600 mb-1.5">Belediye ID (opsiyonel)</span>
+        <input id="userEditMuniId" type="text" class="w-full h-9 rounded-lg border border-slate-300 px-3 text-sm font-mono focus:border-primary focus:ring-1 focus:ring-primary outline-none"/>
       </label>
       <div class="flex justify-end gap-2 pt-2">
-        <button type="button" id="userModalCancel" class="px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-300">İptal</button>
-        <button type="submit" class="bg-primary text-white font-bold px-5 py-2.5 rounded-xl text-sm">Kaydet</button>
+        <button type="button" id="userModalCancel" class="h-9 px-4 rounded-lg text-sm font-medium border border-slate-300 text-slate-700 hover:bg-slate-50">İptal</button>
+        <button type="submit" class="h-9 px-5 rounded-lg bg-primary text-white font-semibold text-sm hover:bg-primary-container">Kaydet</button>
       </div>
     </form>
   </div>
 </div>
 
-<div id="toastContainer" class="fixed bottom-6 right-6 z-[60] space-y-2"></div>
+<div id="toastContainer" class="fixed bottom-6 right-6 z-[60] space-y-2" aria-live="polite"></div>
 
 <script type="module">
 const SUPABASE_URL = 'https://jxmorcxbzsdsrylrqsbz.supabase.co';
@@ -504,6 +516,7 @@ const PHOTO_FALLBACK = 'assets/logo.png';
 const PWD_KEY = 'copavcisi_admin_pwd';
 const PAGE_SIZE = 20;
 const MUNI_PAGE_SIZE = 25;
+const BADGE = 'inline-flex items-center h-5 px-1.5 rounded-md text-[11px] font-medium whitespace-nowrap';
 
 const $ = (id) => document.getElementById(id);
 
@@ -540,7 +553,7 @@ function showView(name) {
 function toast(message, type = 'info') {
   const container = $('toastContainer');
   const el = document.createElement('div');
-  const base = 'toast px-4 py-3 rounded-xl shadow-lg text-sm font-medium max-w-sm';
+  const base = 'toast px-4 py-3 rounded-lg shadow-lg text-sm font-medium max-w-sm';
   const variant = type === 'error'
     ? 'bg-red-600 text-white'
     : type === 'success'
@@ -612,28 +625,28 @@ function escapeHtml(str) {
 
 function pipelineInfo(r) {
   if (r.approval_status === 'rejected') {
-    return { key: 'rejected', label: 'Reddedildi', cls: 'bg-red-100 text-red-800' };
+    return { key: 'rejected', label: 'Reddedildi', cls: 'bg-red-50 text-red-700' };
   }
   if (r.approval_status === 'pending') {
-    return { key: 'pending', label: 'Bekliyor', cls: 'bg-emerald-100 text-emerald-900' };
+    return { key: 'pending', label: 'Bekliyor', cls: 'bg-emerald-50 text-emerald-700' };
   }
   if (r.approval_status === 'approved' && !r.notified_at) {
-    return { key: 'queued', label: 'Kuyrukta', cls: 'bg-amber-100 text-amber-900' };
+    return { key: 'queued', label: 'Kuyrukta', cls: 'bg-amber-50 text-amber-700' };
   }
   if (r.email_notify_outcome === 'sent') {
-    return { key: 'delivered', label: 'İletildi', cls: 'bg-sky-100 text-sky-900' };
+    return { key: 'delivered', label: 'İletildi', cls: 'bg-sky-50 text-sky-700' };
   }
   if (
     r.status === 'not_delivered' ||
     r.email_notify_outcome === 'skipped_no_recipient' ||
     r.email_notify_outcome === 'skipped_opt_out'
   ) {
-    return { key: 'not_delivered', label: 'İletilemedi', cls: 'bg-orange-100 text-orange-900' };
+    return { key: 'not_delivered', label: 'İletilemedi', cls: 'bg-orange-50 text-orange-700' };
   }
   if (r.status === 'forwarded' || (r.approval_status === 'approved' && r.notified_at)) {
-    return { key: 'delivered', label: 'İletildi', cls: 'bg-sky-100 text-sky-900' };
+    return { key: 'delivered', label: 'İletildi', cls: 'bg-sky-50 text-sky-700' };
   }
-  return { key: 'other', label: r.status || r.approval_status || '—', cls: 'bg-slate-100 text-slate-700' };
+  return { key: 'other', label: r.status || r.approval_status || '—', cls: 'bg-slate-100 text-slate-600' };
 }
 
 function outcomeLabel(o) {
@@ -643,6 +656,32 @@ function outcomeLabel(o) {
     case 'skipped_opt_out': return 'Opt-out';
     default: return o || '—';
   }
+}
+
+function emailRoutingLabel(routing) {
+  switch (routing) {
+    case 'district_table': return 'İlçe kutusu';
+    case 'metropolitan': return 'Büyükşehir';
+    case 'istanbul_slug': return 'İstanbul slug';
+    case 'district_row_fallback_province': return 'İlçe satırı (fallback)';
+    case 'skipped_no_recipient': return 'Alıcı yok';
+    case 'skipped_opt_out': return 'Opt-out';
+    default: return routing || null;
+  }
+}
+
+function emailToInfo(r) {
+  const to = r.email_notify_to || r.email_to_preview || null;
+  const routing = r.email_notify_routing || r.email_routing_preview || null;
+  return { to, routingLabel: emailRoutingLabel(routing) };
+}
+
+function emailToLineHtml(r, extra) {
+  const { to, routingLabel } = emailToInfo(r);
+  const parts = [`<span class="text-slate-500 font-medium">Kime:</span> ${escapeHtml(to || '—')}`];
+  if (routingLabel) parts.push(escapeHtml(routingLabel));
+  if (extra) parts.push(escapeHtml(extra));
+  return parts.join(' <span class="text-slate-300">·</span> ');
 }
 
 function setTab(tab) {
@@ -705,31 +744,22 @@ function applyStats(s) {
   set('queueCountBadge', s.queued ?? 0);
 }
 
-function compactReportCard(r, { clickable = true } = {}) {
+function compactReportCard(r) {
   const photoUrl = Array.isArray(r.photo_urls) && r.photo_urls[0] ? r.photo_urls[0] : PHOTO_FALLBACK;
-  const muni = r.municipalities || {};
   const pipe = pipelineInfo(r);
   const li = document.createElement('li');
-  li.className = 'bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm';
-  if (clickable) {
-    li.classList.add('cursor-pointer', 'hover:border-slate-300');
-    li.dataset.openReport = r.id;
-  }
+  li.className = 'flex items-center gap-3 px-3 py-2.5 hover:bg-slate-50 cursor-pointer transition-colors';
+  li.dataset.openReport = r.id;
   li.innerHTML = `
-    <div class="grid grid-cols-[72px_1fr] gap-0">
-      <div class="bg-slate-100 h-full min-h-[4.5rem] overflow-hidden">
-        <img src="${escapeHtml(photoUrl)}" alt="" class="w-full h-full object-cover" loading="lazy"
-             onerror="this.src='${PHOTO_FALLBACK}'"/>
+    <img src="${escapeHtml(photoUrl)}" alt="" class="w-10 h-10 rounded-md object-cover bg-slate-100 shrink-0" loading="lazy"
+         onerror="this.src='${PHOTO_FALLBACK}'"/>
+    <div class="min-w-0 flex-1">
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <p class="text-sm font-medium text-slate-800 truncate">${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</p>
+        <span class="${BADGE} ${pipe.cls}">${escapeHtml(pipe.label)}</span>
+        <span class="${BADGE} bg-slate-100 text-slate-600">${escapeHtml(categoryLabel(r.category))}</span>
       </div>
-      <div class="p-3">
-        <div class="flex flex-wrap gap-1.5 mb-1">
-          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${pipe.cls}">${escapeHtml(pipe.label)}</span>
-          <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">${escapeHtml(categoryLabel(r.category))}</span>
-        </div>
-        <p class="text-sm font-semibold">${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</p>
-        <p class="text-xs text-slate-600 line-clamp-1">${escapeHtml(r.address || '-')}</p>
-        <p class="text-[10px] text-slate-500 mt-1">${escapeHtml(muni.name || 'Belediye yok')} · ${escapeHtml(formatDate(r.notified_at || r.approved_at || r.created_at))}</p>
-      </div>
+      <p class="text-[11px] text-slate-400 truncate mt-0.5">${emailToLineHtml(r, formatDate(r.notified_at || r.approved_at || r.created_at))}</p>
     </div>`;
   return li;
 }
@@ -771,25 +801,23 @@ function renderQueuedReports(reports) {
   $('queueEmptyState').classList.add('hidden');
   for (const r of reports) {
     const photoUrl = Array.isArray(r.photo_urls) && r.photo_urls[0] ? r.photo_urls[0] : PHOTO_FALLBACK;
-    const muni = r.municipalities || {};
-    const muniLabel = muni.name ? `${muni.name}${muni.email ? ` · ${muni.email}` : ''}` : 'Belediye atanmamış';
+    const { to, routingLabel } = emailToInfo(r);
     const li = document.createElement('li');
-    li.className = 'bg-amber-50/40 border border-amber-100 rounded-2xl overflow-hidden shadow-sm';
+    li.className = 'bg-white border border-slate-200 rounded-xl overflow-hidden';
     li.innerHTML = `
-      <div class="grid grid-cols-1 md:grid-cols-[120px_1fr] gap-0">
-        <a href="${escapeHtml(photoUrl)}" target="_blank" rel="noopener" class="block bg-slate-100 md:h-full h-32 overflow-hidden">
+      <div class="grid grid-cols-1 sm:grid-cols-[96px_1fr] gap-0">
+        <a href="${escapeHtml(photoUrl)}" target="_blank" rel="noopener" class="block bg-slate-100 sm:h-full h-28 overflow-hidden">
           <img src="${escapeHtml(photoUrl)}" alt="" class="w-full h-full object-cover" loading="lazy" onerror="this.src='${PHOTO_FALLBACK}'"/>
         </a>
-        <div class="p-4">
-          <div class="flex flex-wrap items-center gap-2 mb-2">
-            <span class="inline-block px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-bold uppercase tracking-wide">Kuyruk</span>
-            <span class="inline-block px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">${escapeHtml(categoryLabel(r.category))}</span>
-            <span class="text-[10px] text-slate-500 font-mono select-all">${escapeHtml(r.id)}</span>
+        <div class="p-3">
+          <div class="flex flex-wrap items-center gap-1.5 mb-1.5">
+            <span class="${BADGE} bg-amber-50 text-amber-700">Kuyrukta</span>
+            <span class="${BADGE} bg-slate-100 text-slate-600">${escapeHtml(categoryLabel(r.category))}</span>
           </div>
-          <p class="text-[11px] text-amber-900 font-semibold mb-2">Onay: ${escapeHtml(formatDate(r.approved_at))}</p>
-          <p class="text-sm font-semibold mb-0.5">${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</p>
-          <p class="text-xs text-slate-700 mb-1 line-clamp-2">${escapeHtml(r.address || '-')}</p>
-          <p class="text-[11px] text-slate-500"><span class="font-semibold">Hedef:</span> ${escapeHtml(muniLabel)}</p>
+          <p class="text-sm font-medium text-slate-800">${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</p>
+          <p class="text-xs text-slate-500 line-clamp-1 mt-0.5">${escapeHtml(r.address || '-')}</p>
+          <p class="text-xs text-slate-700 mt-1.5"><span class="font-medium text-slate-500">Kime:</span> ${escapeHtml(to || '—')}</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">${routingLabel ? `${escapeHtml(routingLabel)} · ` : ''}Onay: ${escapeHtml(formatDate(r.approved_at))}</p>
         </div>
       </div>`;
     queueList.appendChild(li);
@@ -809,32 +837,33 @@ function renderPendingReports(reports) {
     const photoUrl = Array.isArray(r.photo_urls) && r.photo_urls[0] ? r.photo_urls[0] : PHOTO_FALLBACK;
     const muni = r.municipalities || {};
     const muniLabel = muni.name ? `${muni.name}${muni.email ? ` · ${muni.email}` : ''}` : 'Belediye atanmamış';
+    const { to, routingLabel } = emailToInfo(r);
     const li = document.createElement('li');
-    li.className = 'bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:border-slate-300 transition-colors';
+    li.className = 'bg-white border border-slate-200 rounded-xl overflow-hidden hover:border-slate-300 transition-colors';
     li.dataset.reportId = r.id;
     li.innerHTML = `
-      <div class="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-0">
-        <a href="${escapeHtml(photoUrl)}" target="_blank" rel="noopener" class="block bg-slate-100 md:h-full h-44 overflow-hidden">
+      <div class="grid grid-cols-1 sm:grid-cols-[120px_1fr] gap-0">
+        <a href="${escapeHtml(photoUrl)}" target="_blank" rel="noopener" class="block bg-slate-100 sm:h-full h-36 overflow-hidden">
           <img src="${escapeHtml(photoUrl)}" alt="" class="w-full h-full object-cover" loading="lazy" onerror="this.src='${PHOTO_FALLBACK}'"/>
         </a>
-        <div class="p-4 sm:p-5">
-          <div class="flex flex-wrap items-center gap-2 mb-2">
-            <span class="inline-block px-2 py-0.5 rounded-full bg-primary/12 text-primary text-[10px] font-bold uppercase tracking-wide">${escapeHtml(categoryLabel(r.category))}</span>
-            <span class="text-[10px] text-slate-500">${escapeHtml(formatDate(r.created_at))}</span>
-            <span class="text-[10px] text-slate-400 font-mono select-all break-all">${escapeHtml(r.id)}</span>
+        <div class="p-4">
+          <div class="flex flex-wrap items-center gap-1.5 mb-1.5">
+            <span class="${BADGE} bg-primary/10 text-primary">${escapeHtml(categoryLabel(r.category))}</span>
+            <span class="text-[11px] text-slate-400">${escapeHtml(formatDate(r.created_at))}</span>
           </div>
-          <p class="text-sm font-semibold mb-0.5">${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</p>
-          <p class="text-xs text-slate-700 mb-1.5 line-clamp-2">${escapeHtml(r.address || '-')}</p>
-          <p class="text-xs text-slate-600 italic mb-3 line-clamp-3 min-h-[2.5rem]">
-            ${r.description ? `"${escapeHtml(r.description)}"` : '<span class="text-slate-400">Açıklama yok</span>'}
+          <p class="text-sm font-medium text-slate-800">${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</p>
+          <p class="text-xs text-slate-600 mt-0.5 line-clamp-2">${escapeHtml(r.address || '-')}</p>
+          <p class="text-xs text-slate-500 italic mt-1.5 line-clamp-2 min-h-[2rem]">
+            ${r.description ? `"${escapeHtml(r.description)}"` : '<span class="text-slate-400 not-italic">Açıklama yok</span>'}
           </p>
-          <p class="text-[11px] text-slate-500 mb-3"><span class="font-semibold">Hedef:</span> ${escapeHtml(muniLabel)}</p>
-          <div class="flex flex-wrap gap-2">
-            <button data-action="approve" type="button" class="inline-flex items-center gap-2 bg-primary text-white font-bold px-4 py-2 rounded-full text-sm hover:bg-primary-container disabled:opacity-50">
-              <span class="material-symbols-outlined text-base">check_circle</span> Onayla
+          <p class="text-[11px] text-slate-500 mt-1.5"><span class="font-medium">Hedef:</span> ${escapeHtml(muniLabel)}</p>
+          <p class="text-[11px] text-slate-400 mt-0.5"><span class="font-medium text-slate-500">Kime:</span> ${escapeHtml(to || '—')}${routingLabel ? ` · ${escapeHtml(routingLabel)}` : ''}</p>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <button data-action="approve" type="button" class="h-9 inline-flex items-center gap-1.5 px-3.5 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-container disabled:opacity-50">
+              <span class="material-symbols-outlined text-[18px]">check_circle</span> Onayla
             </button>
-            <button data-action="reject" type="button" class="inline-flex items-center gap-2 bg-white border border-red-300 text-red-700 font-bold px-4 py-2 rounded-full text-sm hover:bg-red-50 disabled:opacity-50">
-              <span class="material-symbols-outlined text-base">cancel</span> Reddet
+            <button data-action="reject" type="button" class="h-9 inline-flex items-center gap-1.5 px-3.5 rounded-lg border border-red-300 text-red-700 text-sm font-medium hover:bg-red-50 disabled:opacity-50">
+              <span class="material-symbols-outlined text-[18px]">cancel</span> Reddet
             </button>
           </div>
         </div>
@@ -891,9 +920,7 @@ async function handleAction(reportId, action, card) {
     } else {
       toast('Rapor reddedildi.', 'info');
     }
-    card.style.transition = 'opacity 0.3s, transform 0.3s';
-    card.style.opacity = '0';
-    card.style.transform = 'scale(0.97)';
+    card.classList.add('fade-out');
     setTimeout(() => {
       card.remove();
       const remaining = $('reportsList').children.length;
@@ -902,7 +929,7 @@ async function handleAction(reportId, action, card) {
       if (action === 'approve') loadQueued();
       loadedTabs.delete('overview');
       loadedTabs.delete('reports');
-    }, 280);
+    }, 260);
   } catch (err) {
     toast(`Hata: ${err.message}`, 'error');
     buttons.forEach((b) => (b.disabled = false));
@@ -942,28 +969,21 @@ async function loadAllReports(page) {
       const muni = r.municipalities || {};
       const pipe = pipelineInfo(r);
       const li = document.createElement('li');
-      li.className = 'bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm cursor-pointer hover:border-slate-300';
+      li.className = 'flex items-center gap-3 px-3 py-2.5 hover:bg-slate-50 cursor-pointer transition-colors';
       li.dataset.openReport = r.id;
       li.innerHTML = `
-        <div class="grid grid-cols-1 sm:grid-cols-[96px_1fr] gap-0">
-          <div class="bg-slate-100 sm:h-full h-28 overflow-hidden">
-            <img src="${escapeHtml(photoUrl)}" alt="" class="w-full h-full object-cover" loading="lazy" onerror="this.src='${PHOTO_FALLBACK}'"/>
+        <img src="${escapeHtml(photoUrl)}" alt="" class="w-11 h-11 rounded-md object-cover bg-slate-100 shrink-0" loading="lazy" onerror="this.src='${PHOTO_FALLBACK}'"/>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <p class="text-sm font-medium text-slate-800 truncate">${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</p>
+            <span class="${BADGE} ${pipe.cls}">${escapeHtml(pipe.label)}</span>
+            <span class="${BADGE} bg-slate-100 text-slate-600">${escapeHtml(categoryLabel(r.category))}</span>
           </div>
-          <div class="p-4">
-            <div class="flex flex-wrap gap-1.5 mb-2">
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${pipe.cls}">${escapeHtml(pipe.label)}</span>
-              <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold">${escapeHtml(categoryLabel(r.category))}</span>
-              <span class="text-[10px] text-slate-500">${escapeHtml(formatDate(r.created_at))}</span>
-            </div>
-            <p class="text-sm font-semibold">${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</p>
-            <p class="text-xs text-slate-700 line-clamp-2">${escapeHtml(r.address || '-')}</p>
-            <p class="text-[11px] text-slate-500 mt-2">
-              <span class="font-semibold">Belediye:</span> ${escapeHtml(muni.name || '—')}
-              · <span class="font-semibold">İletim:</span> ${escapeHtml(outcomeLabel(r.email_notify_outcome))}
-              · <span class="font-semibold">notified:</span> ${escapeHtml(formatDate(r.notified_at))}
-            </p>
-            <p class="text-[10px] font-mono text-slate-400 mt-1 break-all select-all">${escapeHtml(r.id)}</p>
-          </div>
+          <p class="text-xs text-slate-500 truncate mt-0.5">${escapeHtml(r.address || '-')}</p>
+          <p class="text-[11px] text-slate-400 truncate mt-0.5">
+            <span class="font-medium text-slate-500">Belediye:</span> ${escapeHtml(muni.name || '—')}
+            <span class="text-slate-300">·</span> ${emailToLineHtml(r, formatDate(r.created_at))}
+          </p>
         </div>`;
       $('allReportsList').appendChild(li);
     });
@@ -989,24 +1009,27 @@ async function openReportDrawer(id) {
     const muni = r.municipalities || {};
     const pipe = pipelineInfo(r);
     const photoUrl = Array.isArray(r.photo_urls) && r.photo_urls[0] ? r.photo_urls[0] : PHOTO_FALLBACK;
+    const { to, routingLabel } = emailToInfo(r);
     $('drawerBody').innerHTML = `
-      <img src="${escapeHtml(photoUrl)}" alt="" class="w-full h-48 object-cover rounded-xl mb-4" onerror="this.src='${PHOTO_FALLBACK}'"/>
-      <div class="flex flex-wrap gap-1.5 mb-3">
-        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${pipe.cls}">${escapeHtml(pipe.label)}</span>
-        <span class="px-2 py-0.5 rounded-full bg-slate-100 text-[10px] font-bold">${escapeHtml(categoryLabel(r.category))}</span>
+      <img src="${escapeHtml(photoUrl)}" alt="" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.src='${PHOTO_FALLBACK}'"/>
+      <div class="flex flex-wrap gap-1.5 mb-4">
+        <span class="${BADGE} ${pipe.cls}">${escapeHtml(pipe.label)}</span>
+        <span class="${BADGE} bg-slate-100 text-slate-600">${escapeHtml(categoryLabel(r.category))}</span>
       </div>
-      <dl class="space-y-2 text-xs">
-        <div><dt class="font-semibold text-slate-500">Konum</dt><dd>${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</dd></div>
-        <div><dt class="font-semibold text-slate-500">Adres</dt><dd>${escapeHtml(r.address || '-')}</dd></div>
-        <div><dt class="font-semibold text-slate-500">Açıklama</dt><dd class="min-h-[1.25rem]">${escapeHtml(r.description || '—')}</dd></div>
-        <div><dt class="font-semibold text-slate-500">Belediye</dt><dd>${escapeHtml(muni.name || '—')}${muni.email ? ` · ${escapeHtml(muni.email)}` : ''}</dd></div>
-        <div><dt class="font-semibold text-slate-500">approval_status / status</dt><dd class="font-mono">${escapeHtml(r.approval_status)} / ${escapeHtml(r.status || '—')}</dd></div>
-        <div><dt class="font-semibold text-slate-500">email_notify_outcome</dt><dd>${escapeHtml(outcomeLabel(r.email_notify_outcome))}</dd></div>
-        <div><dt class="font-semibold text-slate-500">Oluşturma</dt><dd>${escapeHtml(formatDate(r.created_at))}</dd></div>
-        <div><dt class="font-semibold text-slate-500">Onay</dt><dd>${escapeHtml(formatDate(r.approved_at))}</dd></div>
-        <div><dt class="font-semibold text-slate-500">Bildirim (notified_at)</dt><dd>${escapeHtml(formatDate(r.notified_at))}</dd></div>
-        <div><dt class="font-semibold text-slate-500">Koordinat</dt><dd class="font-mono">${escapeHtml(r.latitude)}, ${escapeHtml(r.longitude)}</dd></div>
-        <div><dt class="font-semibold text-slate-500">Kullanıcı</dt><dd class="font-mono break-all">${escapeHtml(r.user_id)}</dd></div>
+      <dl class="space-y-3 text-xs">
+        <div><dt class="font-semibold text-slate-500">Konum</dt><dd class="mt-0.5">${escapeHtml(r.district || '-')}, ${escapeHtml(r.city || '-')}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Adres</dt><dd class="mt-0.5">${escapeHtml(r.address || '-')}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Açıklama</dt><dd class="mt-0.5 min-h-[1.25rem]">${escapeHtml(r.description || '—')}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Belediye</dt><dd class="mt-0.5">${escapeHtml(muni.name || '—')}${muni.email ? ` · ${escapeHtml(muni.email)}` : ''}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Kime (e-posta)</dt><dd class="mt-0.5">${escapeHtml(to || '—')}${routingLabel ? ` <span class="text-slate-400">· ${escapeHtml(routingLabel)}</span>` : ''}</dd></div>
+        <div><dt class="font-semibold text-slate-500">approval_status / status</dt><dd class="font-mono mt-0.5">${escapeHtml(r.approval_status)} / ${escapeHtml(r.status || '—')}</dd></div>
+        <div><dt class="font-semibold text-slate-500">email_notify_outcome</dt><dd class="mt-0.5">${escapeHtml(outcomeLabel(r.email_notify_outcome))}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Oluşturma</dt><dd class="mt-0.5">${escapeHtml(formatDate(r.created_at))}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Onay</dt><dd class="mt-0.5">${escapeHtml(formatDate(r.approved_at))}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Bildirim (notified_at)</dt><dd class="mt-0.5">${escapeHtml(formatDate(r.notified_at))}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Koordinat</dt><dd class="font-mono mt-0.5">${escapeHtml(r.latitude)}, ${escapeHtml(r.longitude)}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Rapor ID</dt><dd class="font-mono break-all mt-0.5 select-all">${escapeHtml(r.id)}</dd></div>
+        <div><dt class="font-semibold text-slate-500">Kullanıcı</dt><dd class="font-mono break-all mt-0.5 select-all">${escapeHtml(r.user_id)}</dd></div>
       </dl>`;
   } catch (e) {
     $('drawerBody').innerHTML = `<p class="text-red-700">${escapeHtml(e.message)}</p>`;
@@ -1053,22 +1076,19 @@ async function loadMunicipalities(page) {
     if (!list.length) $('muniEmptyState').classList.remove('hidden');
     list.forEach((m) => {
       const li = document.createElement('li');
-      li.className = 'bg-white border border-slate-200 rounded-2xl p-4 shadow-sm';
+      li.className = 'flex items-center gap-3 px-3 py-2.5 hover:bg-slate-50 transition-colors';
       const notifyOn = m.email_notifications_enabled !== false;
       const active = m.is_active !== false;
       li.innerHTML = `
-        <div class="flex flex-wrap items-start justify-between gap-3">
-          <div class="min-w-0">
-            <p class="font-bold text-sm">${escapeHtml(m.name)}</p>
-            <p class="text-xs text-slate-600">${escapeHtml(m.district)}, ${escapeHtml(m.city)}</p>
-            <p class="text-xs text-slate-500 mt-1">${escapeHtml(m.email || 'E-posta yok')}${m.whatsapp_number ? ` · ${escapeHtml(m.whatsapp_number)}` : ''}</p>
-            <div class="flex flex-wrap gap-1.5 mt-2">
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${notifyOn ? 'bg-emerald-100 text-emerald-900' : 'bg-orange-100 text-orange-900'}">${notifyOn ? 'Bildirim açık' : 'Opt-out'}</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${active ? 'bg-slate-100 text-slate-700' : 'bg-red-100 text-red-800'}">${active ? 'Aktif' : 'Pasif'}</span>
-            </div>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <p class="text-sm font-medium text-slate-800 truncate">${escapeHtml(m.name)}</p>
+            <span class="${BADGE} ${notifyOn ? 'bg-emerald-50 text-emerald-700' : 'bg-orange-50 text-orange-700'}">${notifyOn ? 'Bildirim açık' : 'Opt-out'}</span>
+            <span class="${BADGE} ${active ? 'bg-slate-100 text-slate-600' : 'bg-red-50 text-red-700'}">${active ? 'Aktif' : 'Pasif'}</span>
           </div>
-          <button type="button" data-edit-muni='${escapeHtml(JSON.stringify(m))}' class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold px-3 py-2 rounded-xl text-xs">Düzenle</button>
-        </div>`;
+          <p class="text-xs text-slate-500 truncate mt-0.5">${escapeHtml(m.district)}, ${escapeHtml(m.city)} <span class="text-slate-300">·</span> ${escapeHtml(m.email || 'E-posta yok')}${m.whatsapp_number ? ` · ${escapeHtml(m.whatsapp_number)}` : ''}</p>
+        </div>
+        <button type="button" data-edit-muni='${escapeHtml(JSON.stringify(m))}' class="h-9 px-3 rounded-lg border border-slate-300 text-slate-700 font-medium text-xs hover:bg-slate-100 shrink-0">Düzenle</button>`;
       $('muniList').appendChild(li);
     });
   } catch (err) {
@@ -1122,7 +1142,7 @@ async function loadDistrictEmails(municipalityId) {
     }
     $('districtEmailList').innerHTML = rows.map((row) => `
       <li class="rounded-lg border border-slate-200 px-3 py-2 flex flex-wrap gap-2 justify-between">
-        <span class="font-semibold">${escapeHtml(row.district_key)}</span>
+        <span class="font-medium">${escapeHtml(row.district_key)}</span>
         <span>${escapeHtml(row.email || '—')}${row.kep_email ? ` · KEP: ${escapeHtml(row.kep_email)}` : ''}</span>
       </li>`).join('');
   } catch (e) {
@@ -1157,20 +1177,16 @@ async function loadUsers(page) {
     list.forEach((u) => {
       const muniName = u.municipalities?.name || '—';
       const li = document.createElement('li');
-      li.className = 'bg-white border border-slate-200 rounded-2xl p-4 shadow-sm';
+      li.className = 'flex items-center gap-3 px-3 py-2.5 hover:bg-slate-50 transition-colors';
       li.innerHTML = `
-        <div class="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <p class="font-bold text-sm">${escapeHtml(u.username)}${u.full_name ? ` · ${escapeHtml(u.full_name)}` : ''}</p>
-            <p class="text-xs text-slate-600 mt-1">${escapeHtml(u.role)} · ${escapeHtml(u.user_type)} · ${escapeHtml(u.city || '-')} / ${escapeHtml(u.district || '-')}</p>
-            <p class="text-xs text-slate-500 mt-1">Puan ${escapeHtml(u.total_points)} · Seviye ${escapeHtml(u.level)} · Belediye: ${escapeHtml(muniName)}</p>
-            <p class="text-[10px] font-mono text-slate-400 mt-1 break-all">${escapeHtml(u.id)}</p>
-          </div>
-          <button type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold px-3 py-2 rounded-xl text-xs"
-                  data-edit-user='${escapeHtml(JSON.stringify({ id: u.id, role: u.role, user_type: u.user_type, municipality_id: u.municipality_id || '' }))}'>
-            Düzenle
-          </button>
-        </div>`;
+        <div class="min-w-0 flex-1">
+          <p class="text-sm font-medium text-slate-800 truncate">${escapeHtml(u.username)}${u.full_name ? ` · ${escapeHtml(u.full_name)}` : ''}</p>
+          <p class="text-xs text-slate-500 truncate mt-0.5">${escapeHtml(u.role)} · ${escapeHtml(u.user_type)} · ${escapeHtml(u.city || '-')} / ${escapeHtml(u.district || '-')} <span class="text-slate-300">·</span> Puan ${escapeHtml(u.total_points)} · Seviye ${escapeHtml(u.level)} · ${escapeHtml(muniName)}</p>
+        </div>
+        <button type="button" class="h-9 px-3 rounded-lg border border-slate-300 text-slate-700 font-medium text-xs hover:bg-slate-100 shrink-0"
+                data-edit-user='${escapeHtml(JSON.stringify({ id: u.id, role: u.role, user_type: u.user_type, municipality_id: u.municipality_id || '' }))}'>
+          Düzenle
+        </button>`;
       $('userList').appendChild(li);
     });
   } catch (err) {
